@@ -1,612 +1,702 @@
-/**
- * Agency Shield Nepal — Core Application Logic
- * English default with seamless Devanagari Nepali i18n switching.
- */
+// QUESTION DEFINITIONS FOR SCAM ASSESSMENT
+const QUESTIONS = [
+    { id: "q1", question: "Did the agency ask for payment before signing a written contract?", points: 25, reason: "Payment prior to signing a legal contract is illegal under DoFE regulations." },
+    { id: "q2", question: "Is promised salary 30%+ higher than typical market rate?", points: 15, reason: "Unrealistic wage promises are frequently used to bait candidates." },
+    { id: "q3", question: "Did they pressure you to decide or pay quickly (e.g. 'offer expires today')?", points: 15, reason: "Urgency tactics aim to prevent independent verification." },
+    { id: "q4", question: "Did they refuse to give you a physical copy of the contract to review at home?", points: 20, reason: "Legitimate agencies permit candidates to review terms independently." },
+    { id: "q5", question: "Does the agency lack a physical registered office (operates via mobile/social media only)?", points: 15, reason: "Unregistered sub-agents operate solely via mobile phones or social media." },
+    { id: "q6", question: "Did they request payment to a personal bank account/mobile wallet?", points: 20, reason: "Personal bank transfers bypass legal corporate accountability." },
+    { id: "q7", question: "Were you promised a job or country inconsistent with visa type (e.g. tourist visa)?", points: 15, reason: "Traveling on tourist visas for overseas employment bypasses legal safety." }
+];
 
-// i18n Dictionaries
-const TRANSLATIONS = {
-    en: {
-        nav: { title: "Agency Shield Nepal", wizard: "Check Offer", search: "Verify Agency" },
-        quiz: {
-            title: "Offer Risk Questionnaire",
-            subtitle: "9 research-backed questions to detect fraud and illegal recruitment patterns",
-            options: { yes: "Yes", no: "No", unsure: "Unsure" },
-            questions: {
-                q1: { text: "Did you receive this job offer without applying — e.g. through an unsolicited Facebook/social media message or text?", reason: "⚠️ Receiving unsolicited job offers via social media is a primary tactic used by illegal brokers and scammers (+15 points)." },
-                q2: { text: "Were you asked to pay any amount before you had a signed, written contract in hand?", reason: "⚠️ Requesting payment without a signed written contract is illegal under Nepal law and a major fraud indicator (+25 points)." },
-                q3: { text: "Is the offered salary noticeably higher than typical pay for this type of job and destination country?", reason: "⚠️ Unreasonably high salary promises are often used as bait to trap jobseekers and collect illegal fees (+15 points)." },
-                q4: { text: "Were you asked to pay through a personal bank account or personal mobile wallet, rather than the agency's official channel?", reason: "⚠️ Paying into personal bank accounts or mobile wallets leaves no legal paper trail against the manpower agency (+20 points)." },
-                q5: { text: "Did they pressure you to decide or pay quickly (e.g. \"limited seats,\" \"offer expires today\")?", reason: "⚠️ Artificial urgency like 'limited seats' is a psychological pressure tactic to prevent due diligence (+15 points)." },
-                q6: { text: "Did they ask you to hand over your passport permanently, or say they'd \"hold it until you return\"?", reason: "⚠️ Permanent passport confiscation is a severe danger sign associated with human trafficking and forced labor (+25 points)." },
-                q7: { text: "Did they refuse to give you a copy of the contract to read at home before signing?", reason: "⚠️ Refusing to let you review contract terms at home strongly indicates deceptive clauses (+15 points)." },
-                q8: { text: "Is the promised departure date unusually soon (e.g. within days/1-2 weeks) for this type of visa process?", reason: "⚠️ Promises of departure within 1-2 weeks usually signal illegal deployment on visit/tourist visas without DoFE approval (+10 points)." },
-                q9: { text: "Does the agency lack a visitable physical office, operating only through phone/social media?", reason: "⚠️ Operating without a physical office allows brokers to vanish easily after taking payment (+10 points)." }
-            },
-            buckets: {
-                low: { label: "Low Risk", badge: "Safe Signal", advice: "Standard precautions apply. Verify DoFE quota availability and Free Visa / Free Ticket provisions." },
-                medium: { label: "Medium Risk", advice: "Caution required. Re-verify agency license status with DoFE and insist on stamped official bank receipts." },
-                high: { label: "High Risk", badge: "Danger Signal", advice: "Do not pay any money. Multiple critical scam and trafficking red flags were detected. Report to DoFE or police." }
-            }
-        }
-    },
-    ne: {
-        nav: { title: "एजेन्सी सिल्ड नेपाल", wizard: "अफर जाँच", search: "एजेन्सी खोज" },
-        quiz: {
-            title: "जोखिम मूल्याङ्कन प्रश्नोत्तरी",
-            subtitle: "ठगी र गैरकानुनी वैदेशिक रोजगार अफर पहिचान गर्न ९ प्रश्नहरू",
-            options: { yes: "हो", no: "होइन", unsure: "थाहा छैन / स्पष्ट छैन" },
-            questions: {
-                q1: { text: "के तपाईंले आवेदन नै नदिई यो रोजगारीको अफर पाउनुभएको हो—जस्तै फेसबुक, सामाजिक सञ्जाल वा म्यासेजमा अफर आएको हो?", reason: "⚠️ नमागीकन सामाजिक सञ्जाल वा म्यासेजमा आउने अफरहरू धेरैजसो गैरकानुनी एजेन्ट र ठगहरूले प्रयोग गर्ने तरिका हो (+१५ अंक)।" },
-                q2: { text: "के हातमा हस्ताक्षर गरिएको लिखित सम्झौतापत्र (कन्ट्र्याक्ट) नपरीकनै पैसा मागिएको छ?", reason: "⚠️ लिखित सम्झौतापत्र बिना नै पैसा माग्नु गैरकानुनी हो र यो ठगीको ठूलो संकेत हो (+२५ अंक)।" },
-                q3: { text: "के तोकिएको देश र कामको लागि तोकिएको तलब सामान्य दरभन्दा अस्वाभाविक रूपमा धेरै छ?", reason: "⚠️ बजारदर भन्दा अस्वाभाविक धेरै तलबको प्रलोभन देखाउनु मानिसहरूलाई फसाएर पैसा उठाउने बहाना हुन सक्छ (+१५ अंक)।" },
-                q4: { text: "के एजेन्सीको आधिकारिक खाताको सट्टा कुनै व्यक्तिको व्यक्तिगत बैंक खाता वा मोबाइल वालेट (इ-सेवा/खल्ती आदि) मा पैसा बुझाउन भनिएको छ?", reason: "⚠️ व्यक्तिगत खाता वा मोबाइल वालेटमा पैसा पठाउँदा ठगी भएमा एजेन्सीविरुद्ध कानुनी प्रमाण पुग्दैन (+२० अंक)।" },
-                q5: { text: "के उनीहरूले तपाईंलाई तुरुन्तै निर्णय गर्न वा पैसा बुझाउन दबाब दिएका छन् (जस्तै \"सिट सीमित छ\", \"आजै अन्तिम दिन हो\")?", reason: "⚠️ \"सिट सीमित छ\" जस्ता दबाब मानिसहरूलाई सोचविचार र बुझबुझारथ गर्न नदिन प्रयोग गरिने रणनीति हो (+१५ अंक)।" },
-                q6: { text: "के उनीहरूले तपाईंको पासपोर्ट स्थायी रूपमा मागेका छन् वा \"फर्किने बेलासम्म हामी राख्छौँ\" भनेका छन्?", reason: "⚠️ पासपोर्ट नियन्त्रणमा लिनु गम्भीर खतराको घण्टी हो—यो मानव बेचबिखन र जबरजस्ती श्रम गराउनेसँग जोडिएको हुन्छ (+२५ अंक)।" },
-                q7: { text: "के उनीहरूले दस्तखत गर्नुअघि सम्झौतापत्रको प्रतिलिपि घर लगेर शान्तसँग पढ्न दिन अस्वीकार गरे?", reason: "⚠️ सम्झौतापत्र घरमा लगेर पढ्न नदिनुले पछि सेवासुविधा वा सर्तहरूमा बदमासी गर्ने सम्भावना देखाउँछ (+१५ अंक)।" },
-                q8: { text: "के भिसा प्रक्रियाको लागि अस्वाभाविक रूपमा चाँडै (केही दिन वा १-२ हप्ताभित्रै) उढाउँछु भनिएको छ?", reason: "⚠️ १-२ हप्तामै उढाउँछु भन्नुले श्रम स्वीकृति बिना भिजिट भिसामा पठाउन खोजेको संकेत गर्छ (+१० अंक)।" },
-                q9: { text: "के उक्त एजेन्सीको जान मिल्ने आधिकारिक कार्यालय छैन र फोन वा सामाजिक सञ्जालबाट मात्र काम भइरहेको छ?", reason: "⚠️ भौतिक कार्यालय नभई फोन वा सामाजिक सञ्जालबाट मात्र चल्ने व्यक्तिहरू पैसा लिएर सहजै सम्पर्कविहीन हुने जोखिम हुन्छ (+१० अंक)।" }
-            },
-            buckets: {
-                low: { label: "कम जोखिम (Low Risk)", badge: "सुरक्षित सङ्केत", advice: "साधारण सतर्कता अपनाउनुहोस्। आधिकारिक सरकारी कोटा र फ्री-भिसा फ्री-टिकट नियमहरू पुनः पुष्टि गर्नुहोस्।" },
-                medium: { label: "मध्यम जोखिम (Medium Risk)", advice: "सावधानी अपनाउनुहोस्। DoFE दर्ता स्थिति प्रमाणित गर्नुहोस् र कुनै पनि भुक्तानीको आधिकारिक छापसहितको रसिद मात्र लिनुहोस्।" },
-                high: { label: "उच्च जोखिम (High Risk)", badge: "गम्भीर खतरा", advice: "पैसा नबुझाउनुहोस्। यो अफरमा ठगी र गैरकानुनी ओसारपसारका गम्भीर संकेतहरू छन्। DoFE वा प्रहरीमा उजुरी गर्नुहोस्।" }
-            }
-        }
-    }
+// STATE MANAGEMENT
+let currentSearchResults = [];
+let activeQuizAgency = null;
+let autocompleteDebounceTimer = null;
+
+const wizardState = {
+    step: 1,
+    country: '',
+    jobRole: '',
+    salary: '',
+    selectedAgency: null, // Selected DB object or synthetic object
+    quizAnswers: [],
+    quizScore: 0,
+    quizLevel: 'Low',
+    precautionResult: null
 };
 
-// 9 Questions & Point Weights Configuration
-const QUIZ_QUESTIONS = [
-    { id: 'q1', pts: 15 },
-    { id: 'q2', pts: 25 },
-    { id: 'q3', pts: 15 },
-    { id: 'q4', pts: 20 },
-    { id: 'q5', pts: 15 },
-    { id: 'q6', pts: 25 },
-    { id: 'q7', pts: 15 },
-    { id: 'q8', pts: 10 },
-    { id: 'q9', pts: 10 }
-];
-
-// App Global State (Default: English)
-let currentLanguage = 'en';
-let currentWizardStep = 1;
-let selectedWizardAgency = null;
-let activeModalAgency = null;
-
-// Mock Local DoFE Registry
-const MOCK_REGISTRY = [
-    { id: 101, name: 'Talent Finder Human Resources Pvt. Ltd.', license_no: 'DoFE-1420', district: 'Kathmandu', status: 'Active', phone: '+977-1-4455660' },
-    { id: 102, name: 'Alpine Overseas Recruitment Pvt. Ltd.', license_no: 'DoFE-0891', district: 'Lalitpur', status: 'Active', phone: '+977-1-5522110' },
-    { id: 103, name: 'Gurkha International Manpower Services', license_no: 'DoFE-0214', district: 'Pokhara', status: 'Active', phone: '+977-61-520110' },
-    { id: 104, name: 'Prabhu Overseas Educational & Employment', license_no: 'DoFE-1102', district: 'Chitwan', status: 'Active', phone: '+977-56-511220' },
-    { id: 105, name: 'Himalayan Job Placement Agency', license_no: 'DoFE-0544', district: 'Kathmandu', status: 'Suspended', phone: '+977-1-4223344' }
-];
-
-// Initialize App
-document.addEventListener('DOMContentLoaded', () => {
-    initAutocomplete();
-    initSearchForm();
-    initModalEvents();
-    switchLanguage('en'); // Set English as default
-});
-
-/**
- * Switch Active Language (English <-> Nepali)
- */
-function switchLanguage(lang) {
-    if (!TRANSLATIONS[lang]) return;
-    currentLanguage = lang;
-
-    // Toggle Button Styles
-    const btnEn = document.getElementById('langBtnEn');
-    const btnNe = document.getElementById('langBtnNe');
-
-    if (btnEn && btnNe) {
-        if (lang === 'en') {
-            btnEn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all bg-slate-900 text-white shadow-sm";
-            btnNe.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all text-slate-600 hover:text-slate-900";
-        } else {
-            btnNe.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all bg-slate-900 text-white shadow-sm";
-            btnEn.className = "px-2.5 py-1 text-xs font-bold rounded-md transition-all text-slate-600 hover:text-slate-900";
-        }
-    }
-
-    // Re-render Active Forms/Components
-    renderQuizForm('wizQuizForm', currentLanguage);
-    renderQuizForm('quizForm', currentLanguage);
-
-    // Update Headings
-    const quizTitle = document.getElementById('quizTitleHeader');
-    const quizSub = document.getElementById('quizSubHeader');
-
-    if (quizTitle) quizTitle.textContent = TRANSLATIONS[lang].quiz.title;
-    if (quizSub) quizSub.textContent = TRANSLATIONS[lang].quiz.subtitle;
-
-    // Refresh step 4 results if currently viewing results
-    if (currentWizardStep === 4) {
-        submitWizardAssessment();
-    }
-}
-
-/**
- * SPA View Navigation
- */
+// VIEW ROUTER
 function navTo(viewName) {
-    const landingView = document.getElementById('landingView');
-    const wizardView = document.getElementById('wizardView');
-    const searchView = document.getElementById('searchView');
-
-    if (!landingView || !wizardView || !searchView) return;
-
-    landingView.classList.add('hidden');
-    wizardView.classList.add('hidden');
-    searchView.classList.add('hidden');
+    document.getElementById('landingView').classList.add('hidden');
+    document.getElementById('wizardView').classList.add('hidden');
+    document.getElementById('searchView').classList.add('hidden');
 
     if (viewName === 'wizard') {
-        wizardView.classList.remove('hidden');
-        goToWizardStep(1);
+        document.getElementById('wizardView').classList.remove('hidden');
+        if (wizardState.step === 1) goToWizardStep(1);
     } else if (viewName === 'search') {
-        searchView.classList.remove('hidden');
+        document.getElementById('searchView').classList.remove('hidden');
     } else {
-        landingView.classList.remove('hidden');
+        document.getElementById('landingView').classList.remove('hidden');
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/**
- * Wizard Step Switcher
- */
-function goToWizardStep(step) {
-    currentWizardStep = step;
-
-    const stepLabel = document.getElementById('wizardStepLabel');
-    const stepTitle = document.getElementById('wizardStepTitle');
-    const progressBar = document.getElementById('wizardProgressBar');
-
-    const step1 = document.getElementById('wizardStep1');
-    const step2 = document.getElementById('wizardStep2');
-    const step3 = document.getElementById('wizardStep3');
-    const step4 = document.getElementById('wizardStep4');
-
-    if (stepLabel) stepLabel.textContent = `Step ${step} of 4`;
-    if (progressBar) progressBar.style.width = `${(step / 4) * 100}%`;
-
-    [step1, step2, step3, step4].forEach((s, idx) => {
-        if (s) {
-            if (idx + 1 === step) s.classList.remove('hidden');
-            else s.classList.add('hidden');
-        }
-    });
-
-    if (step === 1 && stepTitle) stepTitle.textContent = currentLanguage === 'ne' ? 'अफर विवरण' : 'Offer Details';
-    if (step === 2) {
-        if (stepTitle) stepTitle.textContent = currentLanguage === 'ne' ? 'दर्ता जाँच' : 'License Check';
-        evaluateStep2AgencyStatus();
+// FIX 1 HELPER: GET OR CONSTRUCT AGENCY DATA (FREE-TEXT SUPPORT)
+function getWizardAgencyData() {
+    const rawInput = document.getElementById('wizAgencyInput').value.trim();
+    
+    // If user clicked an autocomplete dropdown item and the text matches, return it
+    if (wizardState.selectedAgency && wizardState.selectedAgency.name.toLowerCase() === rawInput.toLowerCase()) {
+        return wizardState.selectedAgency;
     }
-    if (step === 3 && stepTitle) stepTitle.textContent = currentLanguage === 'ne' ? 'जोखिम प्रश्नोत्तरी' : 'Risk Questionnaire';
-    if (step === 4 && stepTitle) stepTitle.textContent = currentLanguage === 'ne' ? 'मूल्याङ्कन नतिजा' : 'Assessment Results';
+    
+    // Check if typed text matches any autocomplete item in memory
+    if (window.tempAutocompleteResults && window.tempAutocompleteResults.length > 0) {
+        const exactMatch = window.tempAutocompleteResults.find(
+            item => item.name.toLowerCase() === rawInput.toLowerCase() || item.permission_no.toLowerCase() === rawInput.toLowerCase()
+        );
+        if (exactMatch) {
+            wizardState.selectedAgency = exactMatch;
+            return exactMatch;
+        }
+    }
 
-    window.scrollTo({ top: 120, behavior: 'smooth' });
+    if (!rawInput) return null;
+
+    // Synthetic UNREGISTERED agency object for unlisted or low-similarity inputs
+    return {
+        id: null,
+        name: rawInput,
+        permission_no: "UNREGISTERED",
+        district: "Not Listed",
+        is_unregistered: true,
+        ui_status: {
+            color: "red",
+            label: "NOT FOUND IN DOFE REGISTRY",
+            description: "This agency name is not registered with Nepal's Department of Foreign Employment. Operating without an official license is illegal."
+        },
+        community_reports: { total_count: 0, avg_risk_level: "N/A", list: [] }
+    };
 }
 
-/**
- * Autocomplete Input Handler
- */
-function initAutocomplete() {
-    const input = document.getElementById('wizAgencyInput');
-    const listContainer = document.getElementById('wizAutocompleteList');
-
-    if (!input || !listContainer) return;
-
-    input.addEventListener('input', (e) => {
-        const query = e.target.value.trim().toLowerCase();
-        if (query.length < 2) {
-            listContainer.classList.add('hidden');
+// WIZARD STEP NAVIGATION
+function goToWizardStep(stepNum) {
+    // Validate Step 1 before advancing
+    if (stepNum > 1 && wizardState.step === 1) {
+        const agencyData = getWizardAgencyData();
+        if (!agencyData || !agencyData.name.trim()) {
+            alert("Please enter a recruiting agency name to proceed.");
             return;
         }
+        wizardState.selectedAgency = agencyData;
+    }
 
-        const matches = MOCK_REGISTRY.filter(a => 
-            a.name.toLowerCase().includes(query) || 
-            a.license_no.toLowerCase().includes(query)
-        );
+    wizardState.step = stepNum;
 
-        if (matches.length === 0) {
-            listContainer.innerHTML = `
-                <div class="p-3 text-xs text-slate-500 font-medium">
-                    No official registry matches found. Proceed with <strong>"${e.target.value}"</strong>.
-                </div>
-            `;
-        } else {
-            listContainer.innerHTML = matches.map(a => `
-                <div onclick="selectAgencyFromAutocomplete('${a.name}', '${a.license_no}', '${a.district}', '${a.status}')" class="p-3 hover:bg-slate-100 cursor-pointer border-b border-slate-100 last:border-0">
-                    <div class="text-xs font-bold text-slate-900">${a.name}</div>
-                    <div class="text-[11px] text-slate-500">${a.license_no} • ${a.district} • Status: ${a.status}</div>
-                </div>
-            `).join('');
-        }
-        listContainer.classList.remove('hidden');
-    });
+    // Update Progress Indicator UI
+    const stepTitles = ["Offer Details", "DoFE License Check", "Scam Questionnaire", "Precaution Result"];
+    document.getElementById('wizardStepLabel').innerText = `Step ${stepNum} of 4`;
+    document.getElementById('wizardStepTitle').innerText = stepTitles[stepNum - 1];
+    document.getElementById('wizardProgressBar').style.width = `${(stepNum / 4) * 100}%`;
 
-    document.addEventListener('click', (e) => {
-        if (!input.contains(e.target) && !listContainer.contains(e.target)) {
-            listContainer.classList.add('hidden');
-        }
-    });
+    // Hide all step containers
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById(`wizardStep${i}`).classList.add('hidden');
+    }
+
+    // Step-specific setup
+    if (stepNum === 2) {
+        renderWizardAgencyVerification();
+    } else if (stepNum === 3) {
+        renderWizardQuestionnaire();
+    }
+
+    document.getElementById(`wizardStep${stepNum}`).classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function selectAgencyFromAutocomplete(name, lic, district, status) {
-    selectedWizardAgency = { name, lic, district, status, matched: true };
-    
-    const input = document.getElementById('wizAgencyInput');
-    const listContainer = document.getElementById('wizAutocompleteList');
-    const badge = document.getElementById('wizSelectedAgencyBadge');
-    const badgeName = document.getElementById('wizSelectedAgencyName');
-    const badgeLic = document.getElementById('wizSelectedAgencyLic');
+// STEP 1: AUTOCOMPLETE AND FREE-TEXT INPUT
+const wizAgencyInput = document.getElementById('wizAgencyInput');
+const wizAutocompleteList = document.getElementById('wizAutocompleteList');
 
-    if (input) input.value = name;
-    if (listContainer) listContainer.classList.add('hidden');
-    if (badgeName) badgeName.textContent = name;
-    if (badgeLic) badgeLic.textContent = `${lic} (${district}) — ${status}`;
-    if (badge) badge.classList.remove('hidden');
+wizAgencyInput.addEventListener('input', (e) => {
+    const val = e.target.value.trim();
+    clearTimeout(autocompleteDebounceTimer);
+
+    if (val.length < 2) {
+        wizAutocompleteList.classList.add('hidden');
+        return;
+    }
+
+    autocompleteDebounceTimer = setTimeout(async () => {
+        try {
+            const res = await fetch(`/api/search?q=${encodeURIComponent(val)}`);
+            const data = await res.json();
+            renderAutocompleteDropdown(data.results || [], val);
+        } catch (err) {
+            console.error("Autocomplete fetch error:", err);
+        }
+    }, 250);
+});
+
+function renderAutocompleteDropdown(results, queryText) {
+    if (results.length === 0) {
+        wizAutocompleteList.innerHTML = `
+            <div class="p-3 text-xs text-slate-500">
+                <span class="font-bold text-red-700">No match (score &lt; 80%) in DoFE records.</span><br>
+                You can proceed with "<strong>${escapeHtml(queryText)}</strong>" as an unregistered entity.
+            </div>
+        `;
+        wizAutocompleteList.classList.remove('hidden');
+        window.tempAutocompleteResults = [];
+        return;
+    }
+
+    wizAutocompleteList.innerHTML = results.map((item, idx) => `
+        <div onclick="selectWizardAgency(${idx})" class="p-2.5 border-b border-slate-100 hover:bg-slate-50 cursor-pointer text-xs transition-colors">
+            <strong class="text-slate-900 block text-sm">${escapeHtml(item.name)}</strong>
+            <span class="text-slate-500">Lic #${escapeHtml(item.permission_no || 'N/A')} — ${escapeHtml(item.district || 'N/A')} (${item.similarity_score}% match)</span>
+        </div>
+    `).join('');
+    
+    window.tempAutocompleteResults = results;
+    wizAutocompleteList.classList.remove('hidden');
+}
+
+function selectWizardAgency(idx) {
+    const item = window.tempAutocompleteResults[idx];
+    wizardState.selectedAgency = item;
+    wizAgencyInput.value = item.name;
+
+    document.getElementById('wizSelectedAgencyName').innerText = item.name;
+    document.getElementById('wizSelectedAgencyLic').innerText = `Lic #${item.permission_no || 'N/A'}`;
+    
+    document.getElementById('wizSelectedAgencyBadge').classList.remove('hidden');
+    wizAgencyInput.classList.add('hidden');
+    wizAutocompleteList.classList.add('hidden');
 }
 
 function clearSelectedAgency() {
-    selectedWizardAgency = null;
-    const input = document.getElementById('wizAgencyInput');
-    const badge = document.getElementById('wizSelectedAgencyBadge');
-    if (input) input.value = '';
-    if (badge) badge.classList.add('hidden');
+    wizardState.selectedAgency = null;
+    wizAgencyInput.value = '';
+    wizAgencyInput.classList.remove('hidden');
+    document.getElementById('wizSelectedAgencyBadge').classList.add('hidden');
 }
 
-/**
- * Step 2: Render Agency DoFE Status
- */
-function evaluateStep2AgencyStatus() {
-    const card = document.getElementById('wizAgencyVerificationCard');
-    const inputVal = document.getElementById('wizAgencyInput')?.value.trim() || '';
+// STEP 2: INLINE AGENCY VERIFICATION CARD
+function renderWizardAgencyVerification() {
+    const item = wizardState.selectedAgency;
+    const cardContainer = document.getElementById('wizAgencyVerificationCard');
 
-    if (!card) return;
+    if (!item) return;
 
-    if (!selectedWizardAgency && inputVal) {
-        const match = MOCK_REGISTRY.find(a => 
-            a.name.toLowerCase() === inputVal.toLowerCase() || 
-            a.license_no.toLowerCase() === inputVal.toLowerCase()
-        );
-        if (match) {
-            selectedWizardAgency = { name: match.name, lic: match.license_no, district: match.district, status: match.status, matched: true };
-        } else {
-            selectedWizardAgency = { name: inputVal, lic: 'UNLICENSED / NOT FOUND', district: 'N/A', status: 'Unregistered', matched: false };
-        }
+    const status = item.ui_status;
+    let badgeStyle = "bg-emerald-50 text-emerald-800 border-emerald-300";
+    let cardBorder = "border-emerald-300";
+    
+    if (status.color === 'yellow') {
+        badgeStyle = "bg-amber-50 text-amber-800 border-amber-300";
+        cardBorder = "border-amber-300";
+    } else if (status.color === 'red') {
+        badgeStyle = "bg-red-50 text-red-800 border-red-300 font-bold";
+        cardBorder = "border-red-300";
     }
 
-    if (!selectedWizardAgency) {
-        selectedWizardAgency = { name: 'Unspecified Agency', lic: 'UNLICENSED / NOT FOUND', district: 'N/A', status: 'Unregistered', matched: false };
-    }
-
-    if (selectedWizardAgency.matched && selectedWizardAgency.status === 'Active') {
-        card.innerHTML = `
-            <div class="p-5 rounded-xl bg-emerald-50 border border-emerald-200 space-y-2">
-                <div class="flex items-center gap-2 font-bold text-emerald-900 text-sm sm:text-base">
-                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                    ${currentLanguage === 'ne' ? 'सरकारी दर्ता प्रमाणित (DoFE Registered)' : 'Official DoFE Registration Verified'}
+    cardContainer.innerHTML = `
+        <div class="bg-white border-2 rounded-lg p-4 sm:p-5 ${cardBorder}">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
+                <div>
+                    <span class="text-xs font-bold text-slate-400 uppercase">License: ${escapeHtml(item.permission_no || 'UNREGISTERED')}</span>
+                    <h3 class="text-lg font-bold text-slate-900">${escapeHtml(item.name)}</h3>
                 </div>
-                <p class="text-xs sm:text-sm text-emerald-800 leading-relaxed">
-                    <strong>${selectedWizardAgency.name}</strong> holds an active license (<strong>${selectedWizardAgency.lic}</strong>) registered in ${selectedWizardAgency.district} district.
-                </p>
+                <span class="px-2.5 py-1 rounded-full text-xs font-semibold border ${badgeStyle}">${status.label}</span>
             </div>
-        `;
-    } else {
-        card.innerHTML = `
-            <div class="p-5 rounded-xl bg-red-50 border border-red-200 space-y-2">
-                <div class="flex items-center gap-2 font-bold text-red-900 text-sm sm:text-base">
-                    <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                    ${currentLanguage === 'ne' ? 'DoFE दर्तामा फेला परेन (+३० जोखिम अंक)' : 'NOT FOUND IN DOFE REGISTRY (+30 Risk Points Added)'}
-                </div>
-                <p class="text-xs sm:text-sm text-red-800 leading-relaxed">
-                    <strong>"${selectedWizardAgency.name}"</strong> scored below the 80% similarity cut-off against official DoFE active license lists. Operating recruitment without a valid license is illegal under Nepal Foreign Employment Act.
-                </p>
+            <p class="text-xs text-slate-600 mb-3 leading-relaxed">${status.description}</p>
+            <div class="text-xs text-slate-600 grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                <div><strong>District:</strong> ${escapeHtml(item.district || 'Not Listed')}</div>
+                <div><strong>Phone:</strong> ${escapeHtml(item.telephone || item.mobile || 'Not Listed')}</div>
             </div>
-        `;
-    }
+        </div>
+    `;
 }
 
-/**
- * Render Risk Questionnaire (Points Hidden on Input Screen)
- */
-function renderQuizForm(containerId, lang = currentLanguage) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-
-    const t = TRANSLATIONS[lang].quiz;
-
-    container.innerHTML = QUIZ_QUESTIONS.map((q, idx) => `
-        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200 space-y-2">
-            <label class="block text-xs sm:text-sm font-semibold text-slate-900 leading-snug">
-                ${idx + 1}. ${t.questions[q.id].text}
-            </label>
-            <div class="flex items-center gap-6 pt-1">
-                <label class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 cursor-pointer">
-                    <input type="radio" name="${q.id}" value="yes" class="text-slate-900 focus:ring-slate-900">
-                    <span>${t.options.yes}</span>
+// STEP 3: QUESTIONNAIRE RENDER
+function renderWizardQuestionnaire() {
+    const form = document.getElementById('wizQuizForm');
+    form.innerHTML = QUESTIONS.map((q) => `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm">
+            <p class="font-semibold text-slate-800 mb-2">${q.question}</p>
+            <div class="flex gap-4">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                    <input type="radio" name="wiz_${q.id}" value="yes" class="text-slate-900 focus:ring-slate-900">
+                    <span class="font-medium text-slate-800">Yes (+${q.points} pts)</span>
                 </label>
-                <label class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 cursor-pointer">
-                    <input type="radio" name="${q.id}" value="no" checked class="text-slate-900 focus:ring-slate-900">
-                    <span>${t.options.no}</span>
-                </label>
-                <label class="inline-flex items-center gap-1.5 text-xs font-medium text-slate-700 cursor-pointer">
-                    <input type="radio" name="${q.id}" value="unsure" class="text-slate-900 focus:ring-slate-900">
-                    <span>${t.options.unsure}</span>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                    <input type="radio" name="wiz_${q.id}" value="no" checked class="text-slate-600 focus:ring-slate-500">
+                    <span class="text-slate-600">No</span>
                 </label>
             </div>
         </div>
     `).join('');
 }
 
-/**
- * Recalibrated Risk Buckets: Low (0-25), Medium (30-60), High (65+)
- */
-function calculateRiskLevel(score) {
-    if (score <= 25) {
-        return {
-            level: 'low',
-            badgeClass: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-            containerClass: 'bg-emerald-50 border-emerald-200'
-        };
-    } else if (score <= 60) {
-        return {
-            level: 'medium',
-            badgeClass: 'bg-amber-100 text-amber-800 border-amber-300',
-            containerClass: 'bg-amber-50 border-amber-200'
-        };
-    } else {
-        return {
-            level: 'high',
-            badgeClass: 'bg-red-100 text-red-800 border-red-300',
-            containerClass: 'bg-red-50 border-red-200'
-        };
-    }
-}
-
-/**
- * Process Submission & Build Explanations
- */
-function processQuizSubmission(formId, lang = currentLanguage) {
-    const form = document.getElementById(formId);
-    if (!form) return null;
-
-    const formData = new FormData(form);
-    const t = TRANSLATIONS[lang].quiz;
-
+function submitWizardAssessment() {
     let score = 0;
-    const flaggedReasons = [];
+    const answers = [];
 
-    if (selectedWizardAgency && !selectedWizardAgency.matched) {
-        score += 30;
-        flaggedReasons.push(lang === 'ne' 
-            ? '⚠️ म्यानपावर वा एजेन्ट वैदेशिक रोजगार विभाग (DoFE) मा दर्ता नभएको (+३० अंक)।'
-            : '⚠️ Agency or agent is not found in DoFE official active registry (+30 points).'
-        );
-    }
+    QUESTIONS.forEach(q => {
+        const selected = document.querySelector(`input[name="wiz_${q.id}"]:checked`)?.value;
+        const isYes = selected === 'yes';
+        if (isYes) score += q.points;
 
-    QUIZ_QUESTIONS.forEach(q => {
-        const val = formData.get(q.id);
-        if (val === 'yes') {
-            score += q.pts;
-            flaggedReasons.push(t.questions[q.id].reason);
-        } else if (val === 'unsure') {
-            const partialPts = Math.round(q.pts / 2);
-            score += partialPts;
-            flaggedReasons.push(`${t.questions[q.id].reason} (${lang === 'ne' ? 'आंशिक सङ्केत' : 'Unsure response'})`);
-        }
+        answers.push({
+            question: q.question,
+            flagged: isYes,
+            points: isYes ? q.points : 0,
+            reason: q.reason
+        });
     });
 
-    const assessment = calculateRiskLevel(score);
-    const bucketInfo = t.buckets[assessment.level];
+    let level = "Low";
+    if (score >= 56) level = "High";
+    else if (score >= 26) level = "Medium";
 
-    return {
+    wizardState.quizScore = score;
+    wizardState.quizLevel = level;
+    wizardState.quizAnswers = answers;
+
+    wizardState.precautionResult = calculateCombinedPrecaution(
+        wizardState.selectedAgency,
         score,
-        maxScore: 150,
-        level: assessment.level,
-        bucketInfo,
-        badgeClass: assessment.badgeClass,
-        containerClass: assessment.containerClass,
-        flaggedReasons
+        level
+    );
+
+    renderWizardResult();
+    goToWizardStep(4);
+}
+
+// STEP 4: COMBINED PRECAUTION LEVEL LOGIC
+function calculateCombinedPrecaution(agencyData, quizScore, quizLevel) {
+    const isUnregistered = agencyData.is_unregistered || !agencyData.id;
+    const isUnlicensedOrBlocked = (agencyData.ui_status?.color === 'red') || isUnregistered;
+    const isIncompleteData = (agencyData.ui_status?.color === 'yellow');
+
+    // Rule 1: Fake / Unregistered / Suspended agency -> Automatic HIGH Precaution Level
+    if (isUnlicensedOrBlocked) {
+        const reasons = [];
+        if (isUnregistered) {
+            reasons.push(`The agency "${agencyData.name}" was NOT FOUND in official DoFE government records — this is a critical red flag.`);
+        } else {
+            reasons.push(`Agency license status is suspended or revoked in DoFE records.`);
+        }
+        if (quizLevel === 'High' || quizLevel === 'Medium') {
+            reasons.push(`Additionally, your offer details flagged ${quizScore} points in scam warning patterns.`);
+        }
+
+        return {
+            level: 'HIGH',
+            color: 'red',
+            reasons: reasons,
+            action: 'Multiple serious red flags. Do NOT pay any money or sign any contract until you verify this agency directly through DoFE\'s office.'
+        };
+    }
+
+    // Rule 2: Registered agency, but High Quiz Risk
+    if (quizLevel === 'High') {
+        return {
+            level: 'HIGH',
+            color: 'red',
+            reasons: [
+                'Agency is registered with DoFE, but your offer details flagged multiple severe scam warning signs.',
+                `Questionnaire score reached ${quizScore} points (High Risk threshold).`
+            ],
+            action: 'Multiple serious red flags. Do NOT pay any money or sign any contract until you verify this agency directly through DoFE\'s office.'
+        };
+    }
+
+    // Rule 3: Medium Risk from Quiz OR Incomplete Contact Data
+    if (quizLevel === 'Medium' || isIncompleteData) {
+        const reasons = [];
+        if (isIncompleteData) reasons.push('Agency is listed as active but missing verified phone/address details in official DoFE registry.');
+        if (quizLevel === 'Medium') reasons.push(`Your offer details flagged ${quizScore} points in payment or contract pressure tactics.`);
+
+        return {
+            level: 'MEDIUM',
+            color: 'amber',
+            reasons: reasons,
+            action: 'Some concerning signs. Verify the contract in person at the agency\'s registered office before paying, and consider getting a second opinion from DoFE directly.'
+        };
+    }
+
+    // Rule 4: Verified agency + Low Quiz Risk
+    return {
+        level: 'LOW',
+        color: 'green',
+        reasons: ['Agency is verified active and registered with DoFE, and no major offer scam patterns were flagged.'],
+        action: 'This offer shows no major red flags. Still get everything in writing before paying anything.'
     };
 }
 
-/**
- * Display Results (Step 4)
- */
-function submitWizardAssessment() {
-    const result = processQuizSubmission('wizQuizForm');
-    if (!result) return;
-
-    goToWizardStep(4);
-
+function renderWizardResult() {
+    const res = wizardState.precautionResult;
     const banner = document.getElementById('wizPrecautionBanner');
     const reasonsList = document.getElementById('wizReasonsList');
     const actionAdvice = document.getElementById('wizActionAdvice');
 
-    if (banner) {
-        banner.className = `p-6 rounded-xl border-2 text-center space-y-2 ${result.containerClass}`;
-        banner.innerHTML = `
-            <span class="inline-block text-xs font-extrabold uppercase px-3.5 py-1 rounded-full border ${result.badgeClass}">
-                ${result.bucketInfo.label} — ${result.score} / 150 Points
-            </span>
-            <h3 class="text-xl sm:text-2xl font-bold text-slate-900">${result.bucketInfo.label}</h3>
-        `;
+    if (res.level === 'HIGH') {
+        banner.className = "p-5 rounded-lg border-2 text-center bg-red-50 border-red-300 text-red-900";
+        banner.innerHTML = `<h3 class="text-xl font-extrabold text-red-800">PRECAUTION LEVEL: HIGH RISK</h3><p class="text-xs font-semibold text-red-700">High probability of fraud or unlicensed operation.</p>`;
+    } else if (res.level === 'MEDIUM') {
+        banner.className = "p-5 rounded-lg border-2 text-center bg-amber-50 border-amber-300 text-amber-900";
+        banner.innerHTML = `<h3 class="text-xl font-extrabold text-amber-800">PRECAUTION LEVEL: MEDIUM RISK</h3><p class="text-xs font-semibold text-amber-700">Caution advised. Warning signals detected.</p>`;
+    } else {
+        banner.className = "p-5 rounded-lg border-2 text-center bg-emerald-50 border-emerald-300 text-emerald-900";
+        banner.innerHTML = `<h3 class="text-xl font-extrabold text-emerald-800">PRECAUTION LEVEL: LOW RISK</h3><p class="text-xs font-semibold text-emerald-700">No major red flags detected in DoFE registry or offer quiz.</p>`;
     }
 
-    if (reasonsList) {
-        if (result.flaggedReasons.length > 0) {
-            reasonsList.innerHTML = result.flaggedReasons.map(r => `
-                <li class="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed">${r}</li>
-            `).join('');
-        } else {
-            reasonsList.innerHTML = `
-                <li class="text-xs sm:text-sm text-emerald-800 font-medium">
-                    ${currentLanguage === 'ne' ? 'कुनै पनि प्रमुख जोखिम सङ्केतहरू भेटिएनन्।' : 'No major scam red flags were detected on the risk questionnaire.'}
-                </li>
-            `;
-        }
-    }
-
-    if (actionAdvice) {
-        actionAdvice.textContent = result.bucketInfo.advice;
-    }
+    reasonsList.innerHTML = res.reasons.map(r => `<li>${escapeHtml(r)}</li>`).join('');
+    actionAdvice.innerText = res.action;
 }
 
-function submitWizardReport() {
+async function submitWizardReport() {
+    const comment = document.getElementById('wizReportComment').value.trim();
     const btn = document.getElementById('wizSubmitReportBtn');
-    if (btn) {
-        btn.textContent = currentLanguage === 'ne' ? '✓ सुरक्षा रिपोर्ट बेनामी रूपमा पेस गरियो' : '✓ Safety Report Submitted Anonymously';
-        btn.classList.replace('bg-slate-900', 'bg-emerald-700');
+
+    const payload = {
+        agency_id: wizardState.selectedAgency.id,
+        permission_no: wizardState.selectedAgency.permission_no || "UNREGISTERED",
+        risk_score: wizardState.quizScore,
+        risk_level: wizardState.quizLevel,
+        answers: wizardState.quizAnswers,
+        comment: comment
+    };
+
+    try {
         btn.disabled = true;
+        btn.innerText = "Submitting Report...";
+
+        const res = await fetch('/api/reports', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+            btn.className = "w-full bg-slate-900 text-emerald-400 font-bold py-2.5 rounded-lg text-xs";
+            btn.innerText = "✓ Submitted as Anonymous Community Safety Report";
+        } else {
+            alert("Failed to submit report.");
+            btn.disabled = false;
+            btn.innerText = "Submit as Anonymous Community Safety Report";
+        }
+    } catch (e) {
+        alert("Error connecting to server.");
+        btn.disabled = false;
+        btn.innerText = "Submit as Anonymous Community Safety Report";
     }
 }
 
-/**
- * Standalone Search Engine
- */
-function initSearchForm() {
-    const form = document.getElementById('searchForm');
-    const container = document.getElementById('resultsContainer');
 
-    if (!form || !container) return;
+// STANDALONE AGENCY SEARCH ENGINE (UNREGISTERED NAME SUPPORT)
+const searchForm = document.getElementById('searchForm');
+const searchInput = document.getElementById('searchInput');
+const resultsContainer = document.getElementById('resultsContainer');
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const query = document.getElementById('searchInput').value.trim().toLowerCase();
-        if (!query) return;
+searchForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const query = searchInput.value.trim();
+    if (!query) return;
 
-        const matches = MOCK_REGISTRY.filter(a => 
-            a.name.toLowerCase().includes(query) || 
-            a.license_no.toLowerCase().includes(query)
-        );
+    resultsContainer.innerHTML = `<div class="text-center py-6 text-slate-500 font-medium text-xs">Querying official DoFE database...</div>`;
 
-        if (matches.length > 0) {
-            container.innerHTML = matches.map(a => `
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h3 class="font-bold text-slate-900 text-base">${a.name}</h3>
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                                ${a.status}
-                            </span>
-                        </div>
-                        <p class="text-xs text-slate-500 mt-1">License: <strong>${a.license_no}</strong> • District: ${a.district} • Phone: ${a.phone}</p>
-                    </div>
-                    <div class="flex gap-2 w-full sm:w-auto">
-                        <button onclick="openModalQuizForAgency('${a.name}')" class="flex-1 sm:flex-none px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold">
-                            Run Risk Check
-                        </button>
-                        <button onclick="openShareModal('${a.name}', '${a.license_no}', '${a.status}')" class="px-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50">
-                            Forward
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        } else {
-            container.innerHTML = `
-                <div class="bg-red-50 p-6 rounded-xl border border-red-200 text-center space-y-3">
-                    <h3 class="text-base font-bold text-red-900">NOT FOUND IN DOFE REGISTRY</h3>
-                    <p class="text-xs sm:text-sm text-red-800 max-w-lg mx-auto leading-relaxed">
-                        No agency matching <strong>"${query}"</strong> was found in official records.
-                    </p>
-                    <button onclick="navTo('wizard')" class="inline-block px-5 py-2.5 bg-red-900 text-white font-semibold text-xs rounded-lg hover:bg-red-800">
-                        Launch Full Guided Assessment
+    try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        currentSearchResults = data.results || [];
+        renderSearchResults(currentSearchResults, query, data.match_found);
+    } catch (err) {
+        resultsContainer.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-lg border border-red-200 text-xs">Failed to connect to backend server.</div>`;
+    }
+});
+
+function renderSearchResults(results, query, matchFound) {
+    if (!results || results.length === 0 || !matchFound) {
+        resultsContainer.innerHTML = `
+            <div class="bg-red-50 border-2 border-red-300 rounded-lg p-5 text-center space-y-2">
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-800 border border-red-300 uppercase">
+                    NOT FOUND IN DOFE REGISTRY
+                </span>
+                <h3 class="text-base font-bold text-red-900">No match found for "${escapeHtml(query)}" (similarity &lt; 80%)</h3>
+                <p class="text-xs text-red-700 leading-relaxed max-w-lg mx-auto">
+                    This agency name is not listed in Nepal's Department of Foreign Employment records. Operating without an official DoFE license is illegal. <strong>Do not pay any money to this entity.</strong>
+                </p>
+                <div class="pt-2">
+                    <button onclick="startWizardWithUnregistered('${escapeHtml(query)}')" class="bg-red-800 hover:bg-red-900 text-white font-semibold text-xs px-4 py-2 rounded-lg shadow-sm">
+                        Analyze This Offer in Guided Flow →
                     </button>
                 </div>
-            `;
+            </div>
+        `;
+        return;
+    }
+
+    resultsContainer.innerHTML = results.map((item, index) => {
+        const status = item.ui_status;
+        const reports = item.community_reports;
+        
+        let badgeStyle = "bg-emerald-50 text-emerald-800 border-emerald-300";
+        let cardBorder = "border-slate-200";
+        
+        if (status.color === 'yellow') {
+            badgeStyle = "bg-amber-50 text-amber-800 border-amber-300";
+        } else if (status.color === 'red') {
+            badgeStyle = "bg-red-50 text-red-800 border-red-300 font-bold";
+            cardBorder = "border-red-300";
         }
-    });
+
+        let reportsPill = `<span class="text-slate-400 text-xs italic">No reports submitted yet</span>`;
+        if (reports.total_count > 0) {
+            let rColor = "bg-slate-100 text-slate-700 border-slate-300";
+            if (reports.avg_risk_level === 'High') rColor = "bg-red-50 text-red-800 border-red-300 font-bold";
+            if (reports.avg_risk_level === 'Medium') rColor = "bg-amber-50 text-amber-800 border-amber-300 font-bold";
+            
+            reportsPill = `<span class="inline-block px-2 py-0.5 rounded text-[11px] border ${rColor}">
+                ${reports.total_count} Report(s) (Avg Risk: ${reports.avg_risk_level})
+            </span>`;
+        }
+
+        return `
+            <div class="bg-white rounded-lg border ${cardBorder} p-5 space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-slate-100">
+                    <div>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">License #${escapeHtml(item.permission_no || 'N/A')}</span>
+                        <h2 class="text-base font-bold text-slate-900">${escapeHtml(item.name)}</h2>
+                    </div>
+                    <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold border ${badgeStyle} self-start sm:self-center">
+                        ${status.label}
+                    </span>
+                </div>
+
+                <p class="text-xs text-slate-600 bg-slate-50 p-2.5 rounded border border-slate-200 leading-relaxed">${status.description}</p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600">
+                    <div><strong class="text-slate-800">District:</strong> ${escapeHtml(item.district || 'N/A')}</div>
+                    <div><strong class="text-slate-800">Phone:</strong> ${escapeHtml(item.telephone || item.mobile || 'Not Listed')}</div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-3">
+                    <div class="flex items-center justify-between cursor-pointer" onclick="toggleReportsList(${index})">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-slate-800 uppercase">Community Safety Reports</span>
+                            ${reportsPill}
+                        </div>
+                        <span class="text-xs text-blue-700 font-semibold" id="toggleReportText_${index}">View Details ▼</span>
+                    </div>
+
+                    <div id="reportsList_${index}" class="hidden mt-3 space-y-2 pt-1">
+                        ${renderPastReports(reports)}
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-slate-100">
+                    <button onclick="openShareModal(${index})" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg transition-colors">
+                        Share Summary
+                    </button>
+                    <button onclick="openQuizModal(${index})" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors">
+                        Evaluate / Report Offer
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
-/**
- * Modal Manager
- */
-function initModalEvents() {
-    const quizModal = document.getElementById('quizModal');
-    const closeQuizBtn = document.getElementById('closeQuizModalBtn');
-    const cancelQuizBtn = document.getElementById('cancelQuizBtn');
-    const submitQuizBtn = document.getElementById('submitQuizBtn');
+function startWizardWithUnregistered(name) {
+    navTo('wizard');
+    document.getElementById('wizAgencyInput').value = name;
+    wizardState.selectedAgency = getWizardAgencyData();
+}
 
-    if (closeQuizBtn) closeQuizBtn.addEventListener('click', () => quizModal.classList.add('hidden'));
-    if (cancelQuizBtn) cancelQuizBtn.addEventListener('click', () => quizModal.classList.add('hidden'));
-
-    if (submitQuizBtn) {
-        submitQuizBtn.addEventListener('click', () => {
-            const res = processQuizSubmission('quizForm');
-            if (res) {
-                alert(`Assessment Complete: ${res.bucketInfo.label} (${res.score} / 150 Points)`);
-                quizModal.classList.add('hidden');
-            }
-        });
+function renderPastReports(reports) {
+    if (!reports || reports.total_count === 0) {
+        return `<div class="p-2.5 bg-slate-50 border border-slate-200 rounded text-xs text-slate-500 italic text-center">No reports submitted for this agency yet. (Zero reports does not guarantee safety).</div>`;
     }
 
-    const shareModal = document.getElementById('shareModal');
-    const closeShareBtn = document.getElementById('closeShareModalBtn');
-    const copyShareBtn = document.getElementById('copyShareBtn');
+    return reports.list.map(r => {
+        let badge = "bg-emerald-50 text-emerald-800 border-emerald-200";
+        if (r.risk_level === 'Medium') badge = "bg-amber-50 text-amber-800 border-amber-200";
+        if (r.risk_level === 'High') badge = "bg-red-50 text-red-800 border-red-200 font-bold";
 
-    if (closeShareBtn) closeShareBtn.addEventListener('click', () => shareModal.classList.add('hidden'));
-    if (copyShareBtn) {
-        copyShareBtn.addEventListener('click', () => {
-            const textarea = document.getElementById('shareTextarea');
-            if (textarea) {
-                textarea.select();
-                navigator.clipboard.writeText(textarea.value);
-                copyShareBtn.textContent = '✓ Copied to Clipboard!';
-                setTimeout(() => copyShareBtn.textContent = 'Copy Text to Clipboard', 2000);
-            }
-        });
-    }
+        const flaggedAnswers = (r.answers_json || []).filter(a => a.flagged);
 
-    const smsModal = document.getElementById('smsModal');
-    const openSmsBtn = document.getElementById('openSmsModalBtn');
-    const closeSmsBtn = document.getElementById('closeSmsModalBtn');
-    const smsForm = document.getElementById('smsForm');
+        return `
+            <div class="p-2.5 bg-slate-50 border border-slate-200 rounded text-xs space-y-1">
+                <div class="flex justify-between items-center">
+                    <span class="px-2 py-0.5 rounded text-[10px] border ${badge}">${r.risk_level.toUpperCase()} RISK (Score: ${r.risk_score})</span>
+                    <span class="text-[10px] text-slate-400">${new Date(r.created_at).toLocaleDateString()}</span>
+                </div>
+                ${r.comment ? `<p class="text-slate-700 italic">"${escapeHtml(r.comment)}"</p>` : ''}
+                ${flaggedAnswers.length > 0 ? `
+                    <div class="text-[11px] text-slate-600 pt-0.5">
+                        <strong class="text-slate-700">Flagged Warning Signs:</strong>
+                        <ul class="list-disc pl-4 space-y-0.5 mt-0.5 text-slate-600">
+                            ${flaggedAnswers.map(a => `<li>${escapeHtml(a.question)} (+${a.points} pts)</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }).join('');
+}
 
-    if (openSmsBtn) openSmsBtn.addEventListener('click', () => smsModal.classList.remove('hidden'));
-    if (closeSmsBtn) closeSmsBtn.addEventListener('click', () => smsModal.classList.add('hidden'));
-
-    if (smsForm) {
-        smsForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const input = document.getElementById('smsInput').value.trim();
-            const outBox = document.getElementById('smsDisplayOutgoing');
-            const inBox = document.getElementById('smsDisplayIncoming');
-
-            if (!input) return;
-
-            outBox.textContent = `SENT: ${input}`;
-            outBox.classList.remove('hidden');
-
-            const match = MOCK_REGISTRY.find(a => a.name.toLowerCase().includes(input.toLowerCase()));
-            if (match) {
-                inBox.textContent = `REPLY: [DOFE VERIFIED] ${match.name} (Lic: ${match.license_no}). Status: ${match.status}. Dist: ${match.district}.`;
-            } else {
-                inBox.textContent = `REPLY: [WARNING] "${input}" NOT FOUND in DoFE active registry. High scam risk. Do not pay cash without receipt.`;
-            }
-            inBox.classList.remove('hidden');
-        });
+function toggleReportsList(index) {
+    const el = document.getElementById(`reportsList_${index}`);
+    const txt = document.getElementById(`toggleReportText_${index}`);
+    if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+        txt.innerText = 'Hide Details ▲';
+    } else {
+        el.classList.add('hidden');
+        txt.innerText = 'View Details ▼';
     }
 }
 
-function openModalQuizForAgency(agencyName) {
-    activeModalAgency = agencyName;
-    const title = document.getElementById('quizAgencyName');
-    const quizModal = document.getElementById('quizModal');
-    if (title) title.textContent = `Risk Check: ${agencyName}`;
-    renderQuizForm('quizForm', currentLanguage);
-    if (quizModal) quizModal.classList.remove('hidden');
+// MODAL HANDLERS
+function openShareModal(index) {
+    const item = currentSearchResults[index];
+    const text = `VERIFICATION CHECK: Agency Shield Nepal\n\nAgency: ${item.name}\nLicense #: ${item.permission_no || 'N/A'}\nStatus: ${item.ui_status.label}\nDistrict: ${item.district || 'N/A'}\nPhone: ${item.telephone || item.mobile || 'N/A'}\n\nChecked via Agency Shield (Official DoFE Data). Verify before paying fees!`;
+    
+    document.getElementById('shareTextarea').value = text;
+    document.getElementById('shareModal').classList.remove('hidden');
 }
 
-function openShareModal(name, lic, status) {
-    const modal = document.getElementById('shareModal');
+document.getElementById('copyShareBtn').onclick = () => {
     const textarea = document.getElementById('shareTextarea');
-    if (textarea) {
-        textarea.value = `Agency Shield Nepal Verification Record:\n\nAgency: ${name}\nLicense: ${lic}\nDoFE Status: ${status}\n\nVerified via Agency Shield Nepal Public Safety Platform.`;
+    textarea.select();
+    navigator.clipboard.writeText(textarea.value);
+    document.getElementById('copyShareBtn').innerText = "Copied to Clipboard!";
+    setTimeout(() => { document.getElementById('copyShareBtn').innerText = "Copy Text to Clipboard"; }, 2000);
+};
+
+document.getElementById('closeShareModalBtn').onclick = () => document.getElementById('shareModal').classList.add('hidden');
+
+// SMS Simulator
+document.getElementById('openSmsModalBtn').onclick = () => document.getElementById('smsModal').classList.remove('hidden');
+document.getElementById('closeSmsModalBtn').onclick = () => document.getElementById('smsModal').classList.add('hidden');
+
+document.getElementById('smsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const query = document.getElementById('smsInput').value.trim();
+    if (!query) return;
+
+    const out = document.getElementById('smsDisplayOutgoing');
+    const inc = document.getElementById('smsDisplayIncoming');
+
+    out.innerText = query;
+    out.classList.remove('hidden');
+    inc.classList.add('hidden');
+
+    const formData = new FormData();
+    formData.append('Body', query);
+
+    try {
+        const res = await fetch('/api/sms', { method: 'POST', body: formData });
+        const replyText = await res.text();
+        inc.innerText = replyText;
+        inc.classList.remove('hidden');
+    } catch (err) {
+        inc.innerText = "ERROR: Gateway unreachable";
+        inc.classList.remove('hidden');
     }
-    if (modal) modal.classList.remove('hidden');
+});
+
+// Standalone Risk Modal
+function openQuizModal(index) {
+    activeQuizAgency = currentSearchResults[index];
+    document.getElementById('quizAgencyName').innerText = `Reporting: ${activeQuizAgency.name}`;
+
+    const form = document.getElementById('quizForm');
+    form.innerHTML = QUESTIONS.map((q) => `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm">
+            <p class="font-semibold text-slate-800 mb-2">${q.question}</p>
+            <div class="flex gap-4">
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                    <input type="radio" name="${q.id}" value="yes" onchange="recalculateStandaloneQuiz()" class="text-slate-900 focus:ring-slate-900">
+                    <span class="font-medium text-slate-800">Yes (+${q.points} pts)</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 cursor-pointer">
+                    <input type="radio" name="${q.id}" value="no" onchange="recalculateStandaloneQuiz()" checked class="text-slate-600 focus:ring-slate-500">
+                    <span class="text-slate-600">No</span>
+                </label>
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('quizComment').value = '';
+    recalculateStandaloneQuiz();
+    document.getElementById('quizModal').classList.remove('hidden');
 }
+
+function recalculateStandaloneQuiz() {
+    let score = 0;
+    QUESTIONS.forEach(q => {
+        const selected = document.querySelector(`input[name="${q.id}"]:checked`)?.value;
+        if (selected === 'yes') score += q.points;
+    });
+
+    let level = "Low";
+    if (score >= 56) level = "High";
+    else if (score >= 26) level = "Medium";
+
+    document.getElementById('quizScoreText').innerText = `${score} Points (${level} Risk)`;
+    document.getElementById('quizMeterBar').style.width = `${Math.min(score, 100)}%`;
+}
+
+document.getElementById('closeQuizModalBtn').onclick = () => document.getElementById('quizModal').classList.add('hidden');
+document.getElementById('cancelQuizBtn').onclick = () => document.getElementById('quizModal').classList.add('hidden');
+
+function escapeHtml(str) {
+    return str ? str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) : '';
+}
+// LANDING PAGE COMMUNITY REPORTS PREVIEW (ADDITIVE ONLY)
+function renderLandingReportsPreview() {
+    const container = document.getElementById('landingReportsPreviewContainer');
+    if (!container) return;
+
+    const sampleReports = [
+        {
+            agency_name: "Unregistered Sub-Agent (Global Tech)",
+            risk_level: "High",
+            risk_score: 65,
+            comment: "Demanded 180,000 NPR upfront cash deposit to personal eSewa without written DoFE contract."
+        },
+        {
+            agency_name: "Apex Manpower Services",
+            risk_level: "Medium",
+            risk_score: 35,
+            comment: "Salary offered was 40% higher than market average; refused to provide contract copy for home review."
+        }
+    ];
+
+    container.innerHTML = sampleReports.map(r => {
+        let badge = "bg-amber-50 text-amber-800 border-amber-300";
+        if (r.risk_level === 'High') badge = "bg-red-50 text-red-800 border-red-300 font-bold";
+
+        return `
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs space-y-1">
+                <div class="flex justify-between items-center">
+                    <strong class="text-slate-900 font-bold">${escapeHtml(r.agency_name)}</strong>
+                    <span class="px-2 py-0.5 rounded text-[10px] border ${badge}">${r.risk_level.toUpperCase()} RISK (${r.risk_score} pts)</span>
+                </div>
+                <p class="text-slate-600 italic">"${escapeHtml(r.comment)}"</p>
+            </div>
+        `;
+    }).join('');
+}
+
+// Render preview on initial load
+document.addEventListener('DOMContentLoaded', () => {
+    renderLandingReportsPreview();
+});

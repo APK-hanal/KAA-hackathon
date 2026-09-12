@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
+/* CIVIC TECH RESTRAINED DESIGN SYSTEM TOKENS */
 :root {
   --canvas: #f8fafc;
   --surface: #ffffff;
@@ -9,6 +10,7 @@
   --brand-primary: #0f172a;
   --brand-accent: #1d4ed8;
   
+  /* Strict Risk Status Tokens */
   --risk-low-bg: #f0fdf4;
   --risk-low-border: #bbf7d0;
   --risk-low-text: #15803d;
@@ -22,38 +24,32 @@
   --risk-high-text: #b91c1c;
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
 body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background-color: var(--canvas);
     color: var(--text-main);
     -webkit-font-smoothing: antialiased;
-    line-height: 1.6;
 }
 
 /* Modal Overlay */
 .modal-backdrop {
-    background-color: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(2px);
+    background-color: rgba(15, 23, 42, 0.6);
 }
 
 /* Risk Progress Bar */
 .risk-meter-bar {
-    transition: width 0.35s ease-out, background-color 0.35s ease-out;
+    transition: width 0.3s ease-out, background-color 0.3s ease-out;
 }
 
 /* Autocomplete Dropdown */
 .autocomplete-dropdown {
-    max-height: 280px;
+    max-height: 240px;
     overflow-y: auto;
     z-index: 50;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
 }
 
-/* Scrollbar styling */
+/* Crisp Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
 }
