@@ -1,0 +1,70 @@
+{
+  "nav": {
+    "title": "Agency Shield Nepal",
+    "wizard": "Check Offer",
+    "search": "Verify Agency"
+  },
+  "quiz": {
+    "title": "Offer Risk Questionnaire",
+    "subtitle": "9 research-backed questions to detect fraud and illegal recruitment patterns",
+    "options": {
+      "yes": "Yes",
+      "no": "No",
+      "unsure": "Unsure"
+    },
+    "questions": {
+      "q1": {
+        "text": "Did you receive this job offer without applying — e.g. through an unsolicited Facebook/social media message or text?",
+        "reason": "Receiving unsolicited job offers via social media is a primary tactic used by illegal brokers and scammers (+15 points)."
+      },
+      "q2": {
+        "text": "Were you asked to pay any amount before you had a signed, written contract in hand?",
+        "reason": "Requesting payment without a signed written contract is illegal under Nepal law and a major fraud indicator (+25 points)."
+      },
+      "q3": {
+        "text": "Is the offered salary noticeably higher than typical pay for this type of job and destination country?",
+        "reason": "Unreasonably high salary promises are often used as bait to trap jobseekers and collect illegal fees (+15 points)."
+      },
+      "q4": {
+        "text": "Were you asked to pay through a personal bank account or personal mobile wallet, rather than the agency's official channel?",
+        "reason": "Paying into personal bank accounts or mobile wallets leaves no legal paper trail against the manpower agency (+20 points)."
+      },
+      "q5": {
+        "text": "Did they pressure you to decide or pay quickly (e.g. \"limited seats,\" \"offer expires today\")?",
+        "reason": "Artificial urgency like 'limited seats' is a psychological pressure tactic to prevent due diligence (+15 points)."
+      },
+      "q6": {
+        "text": "Did they ask you to hand over your passport permanently, or say they'd \"hold it until you return\"?",
+        "reason": "Permanent passport confiscation is a severe danger sign associated with human trafficking and forced labor (+25 points)."
+      },
+      "q7": {
+        "text": "Did they refuse to give you a copy of the contract to read at home before signing?",
+        "reason": "Refusing to let you review contract terms at home strongly indicates deceptive clauses (+15 points)."
+      },
+      "q8": {
+        "text": "Is the promised departure date unusually soon (e.g. within days/1-2 weeks) for this type of visa process?",
+        "reason": "Promises of departure within 1-2 weeks usually signal illegal deployment on visit/tourist visas without DoFE approval (+10 points)."
+      },
+      "q9": {
+        "text": "Does the agency lack a visitable physical office, operating only through phone/social media?",
+        "reason": "Operating without a physical office allows brokers to vanish easily after taking payment (+10 points)."
+      }
+    },
+    "buckets": {
+      "low": {
+        "label": "Low Risk",
+        "badge": "Safe Signal",
+        "advice": "Standard precautions apply. Verify DoFE quota availability and Free Visa / Free Ticket provisions."
+      },
+      "medium": {
+        "label": "Medium Risk",
+        "advice": "Caution required. Re-verify agency license status with DoFE and insist on stamped official bank receipts."
+      },
+      "high": {
+        "label": "High Risk",
+        "badge": "Danger Signal",
+        "advice": "Do not pay any money. Multiple critical scam and trafficking red flags were detected. Report to DoFE or police."
+      }
+    }
+  }
+}
