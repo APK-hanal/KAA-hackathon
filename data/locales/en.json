@@ -4,6 +4,61 @@
     "wizard": "Check Offer",
     "search": "Verify Agency"
   },
+  "common": {
+    "step": "Step",
+    "of": "of",
+    "cancel": "Cancel",
+    "clear": "Clear",
+    "forward": "Forward",
+    "license": "License",
+    "district": "District",
+    "phone": "Phone",
+    "status": "Status"
+  },
+  "wizard": {
+    "steps": {
+      "step1": "Offer Details",
+      "step2": "License Check",
+      "step3": "Risk Questionnaire",
+      "step4": "Assessment Results"
+    },
+    "agencyPlaceholder": "Search manpower agency name or license number...",
+    "selectedAgency": "Selected Agency",
+    "verifiedStatus": "Official DoFE Registration Verified",
+    "unverifiedStatus": "NOT FOUND IN DOFE REGISTRY (+30 Risk Points Added)",
+    "unverifiedDesc": "Operating recruitment without a valid license is illegal under Nepal Foreign Employment Act.",
+    "submitReport": "Submit Anonymous Safety Report",
+    "reportSubmitted": "✓ Safety Report Submitted Anonymously",
+    "noFlags": "No major scam red flags were detected on the risk questionnaire."
+  },
+  "search": {
+    "title": "Verify Manpower Agency",
+    "inputPlaceholder": "Type agency name or license number...",
+    "searchBtn": "Search Registry",
+    "runRiskCheck": "Run Risk Check",
+    "notFoundTitle": "NOT FOUND IN DOFE REGISTRY",
+    "notFoundDesc": "No agency matching \"{query}\" was found in official records.",
+    "launchWizard": "Launch Full Guided Assessment"
+  },
+  "modal": {
+    "riskCheckTitle": "Risk Check",
+    "shareTitle": "Share Verification Record",
+    "copyBtn": "Copy Text to Clipboard",
+    "copiedBtn": "✓ Copied to Clipboard!",
+    "submitAssessment": "Submit Assessment",
+    "shareRecordHeader": "Agency Shield Nepal Verification Record:",
+    "shareRecordFooter": "Verified via Agency Shield Nepal Public Safety Platform."
+  },
+  "sms": {
+    "title": "SMS Verification Emulator",
+    "inputLabel": "Enter Agency Name / License:",
+    "inputPlaceholder": "e.g. Talent Finder or DoFE-1420",
+    "sendBtn": "Send SMS",
+    "sentPrefix": "SENT",
+    "replyPrefix": "REPLY",
+    "verifiedReply": "[DOFE VERIFIED] {name} (Lic: {lic}). Status: {status}. Dist: {district}.",
+    "warningReply": "[WARNING] \"{query}\" NOT FOUND in DoFE active registry. High scam risk. Do not pay cash without receipt."
+  },
   "quiz": {
     "title": "Offer Risk Questionnaire",
     "subtitle": "9 research-backed questions to detect fraud and illegal recruitment patterns",

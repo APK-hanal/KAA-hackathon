@@ -34,24 +34,49 @@ class ReportSchema(BaseModel):
     comment: Optional[str] = ""
 
 def compute_ui_status(row):
-    status_str = (row["status"] or "").lower() if "status" in row.keys() else "active"
-    if "suspended" in status_str or "blacklisted" in status_str or "canceled" in status_str:
+    """
+    Bulletproof status calculation checking multiple DB columns, 
+    boolean flags, and common status keywords (English & Nepali).
+    """
+    # 1. Combine all status-related column fields into a searchable string
+    status_parts = []
+    for field in ["status", "permission_status", "agency_status", "remarks", "state", "status_name"]:
+        if field in row and row[field] is not None:
+            status_parts.append(str(row[field]))
+            
+    status_str = " ".join(status_parts).lower()
+
+    # 2. Check boolean / numeric status flags (e.g., is_blocked=1 or is_active=0)
+    is_blocked_flag = (
+        row.get("is_blocked") in (1, "1", True, "true", "True") or
+        row.get("is_active") in (0, "0", False, "false", "False")
+    )
+
+    # 3. Comprehensive blocked/suspended status keywords
+    blocked_keywords = [
+        "block", "suspend", "cancel", "cancle", "revok", "black", 
+        "inact", "deact", "close", "kharaj", "sthagit", "halt", "hold", "reject"
+    ]
+
+    has_blocked_keyword = any(kw in status_str for kw in blocked_keywords)
+
+    if is_blocked_flag or has_blocked_keyword:
         return {
             "color": "red",
-            "label": "SUSPENDED / UNLICENSED",
-            "description": "This agency license has been suspended or canceled by DoFE. Do not conduct business or pay money to them."
+            "label": "BLOCKED / SUSPENDED",
+            "description": "This agency's license has been blocked, suspended, or canceled by DoFE. Do not conduct business or pay money to them."
         }
-    
-    phone = row["telephone"] if "telephone" in row.keys() else None
-    mobile = row["mobile"] if "mobile" in row.keys() else None
-    
+
+    phone = row.get("telephone") if "telephone" in row else None
+    mobile = row.get("mobile") if "mobile" in row else None
+
     if not phone and not mobile:
         return {
             "color": "yellow",
             "label": "INCOMPLETE DOFE CONTACT DATA",
             "description": "Agency is listed as active in registry, but missing verified telephone or office contact details."
         }
-    
+
     return {
         "color": "green",
         "label": "ACTIVE & REGISTERED",

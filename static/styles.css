@@ -8,8 +8,15 @@
   --text-main: #0f172a;
   --text-muted: #475569;
   --brand-primary: #0f172a;
-  --brand-accent: #1d4ed8;
+  --brand-accent: #0d9488;
   
+  /* Teal & Cyan Non-Purple Gradient Tokens */
+  --teal-primary: #0d9488;
+  --teal-secondary: #0284c7;
+  --gradient-teal-vibrant: linear-gradient(135deg, #0d9488 0%, #0284c7 100%);
+  --gradient-hero: linear-gradient(135deg, #0f172a 0%, #115e59 50%, #0d9488 100%);
+  --gradient-glow: linear-gradient(135deg, rgba(13, 148, 136, 0.12) 0%, rgba(2, 132, 199, 0.12) 100%);
+
   /* Strict Risk Status Tokens */
   --risk-low-bg: #f0fdf4;
   --risk-low-border: #bbf7d0;
@@ -29,6 +36,26 @@ body {
     background-color: var(--canvas);
     color: var(--text-main);
     -webkit-font-smoothing: antialiased;
+}
+
+/* Gradient Utility Classes */
+.bg-gradient-teal {
+    background: var(--gradient-teal-vibrant);
+}
+
+.bg-gradient-hero {
+    background: var(--gradient-hero);
+}
+
+.bg-gradient-glow {
+    background: var(--gradient-glow);
+}
+
+.text-gradient-teal {
+    background: var(--gradient-teal-vibrant);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* Modal Overlay */

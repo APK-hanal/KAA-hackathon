@@ -8,7 +8,57 @@ const QUESTIONS = [
     { id: "q6", question: "Did they request payment to a personal bank account/mobile wallet?", points: 20, reason: "Personal bank transfers bypass legal corporate accountability." },
     { id: "q7", question: "Were you promised a job or country inconsistent with visa type (e.g. tourist visa)?", points: 15, reason: "Traveling on tourist visas for overseas employment bypasses legal safety." }
 ];
+// HELPER: DYNAMICALLY RESOLVE AGENCY UI STATUS FROM BACKEND / DB DATA
+function getAgencyUIStatus(item) {
+    if (!item) {
+        return {
+            color: "red",
+            label: "UNKNOWN AGENCY",
+            description: "No agency data provided."
+        };
+    }
 
+    if (item.ui_status && item.ui_status.color && item.ui_status.label) {
+        return item.ui_status;
+    }
+
+    const rawStatus = String(item.status || item.permission_status || item.status_name || '').toLowerCase();
+    const isBlocked = item.is_blocked || item.blocked || item.is_active === false || 
+                      rawStatus.includes('block') || rawStatus.includes('suspend') || 
+                      rawStatus.includes('cancel') || rawStatus.includes('revoke') || 
+                      rawStatus.includes('black') || rawStatus.includes('inactive');
+
+    if (item.is_unregistered || item.permission_no === 'UNREGISTERED') {
+        return {
+            color: "red",
+            label: "NOT FOUND IN DOFE REGISTRY",
+            description: "This agency name is not registered with Nepal's Department of Foreign Employment. Operating without an official license is illegal."
+        };
+    }
+
+    if (isBlocked) {
+        return {
+            color: "red",
+            label: "BLOCKED / SUSPENDED",
+            description: "This agency's license is currently blocked, suspended, or revoked by DoFE. They are NOT authorized to recruit workers."
+        };
+    }
+
+    const isIncomplete = !item.district || (!item.telephone && !item.mobile);
+    if (isIncomplete || rawStatus.includes('pending') || rawStatus.includes('warning') || rawStatus.includes('incomplete')) {
+        return {
+            color: "yellow",
+            label: "INCOMPLETE DATA / CAUTION",
+            description: "Agency is listed as active but missing verified phone/address details in official DoFE registry."
+        };
+    }
+
+    return {
+        color: "green",
+        label: "ACTIVE / REGISTERED",
+        description: "Agency is actively registered and licensed with DoFE for foreign employment recruitment."
+    };
+}
 // STATE MANAGEMENT
 let currentSearchResults = [];
 let activeQuizAgency = null;
@@ -192,7 +242,7 @@ function renderWizardAgencyVerification() {
 
     if (!item) return;
 
-    const status = item.ui_status;
+    const status = getAgencyUIStatus(item);
     let badgeStyle = "bg-emerald-50 text-emerald-800 border-emerald-300";
     let cardBorder = "border-emerald-300";
     
@@ -221,7 +271,6 @@ function renderWizardAgencyVerification() {
         </div>
     `;
 }
-
 // STEP 3: QUESTIONNAIRE RENDER
 function renderWizardQuestionnaire() {
     const form = document.getElementById('wizQuizForm');
@@ -279,9 +328,10 @@ function submitWizardAssessment() {
 
 // STEP 4: COMBINED PRECAUTION LEVEL LOGIC
 function calculateCombinedPrecaution(agencyData, quizScore, quizLevel) {
+    const status = getAgencyUIStatus(agencyData);
     const isUnregistered = agencyData.is_unregistered || !agencyData.id;
-    const isUnlicensedOrBlocked = (agencyData.ui_status?.color === 'red') || isUnregistered;
-    const isIncompleteData = (agencyData.ui_status?.color === 'yellow');
+    const isUnlicensedOrBlocked = (status.color === 'red') || isUnregistered;
+    const isIncompleteData = (status.color === 'yellow');
 
     // Rule 1: Fake / Unregistered / Suspended agency -> Automatic HIGH Precaution Level
     if (isUnlicensedOrBlocked) {
@@ -289,7 +339,7 @@ function calculateCombinedPrecaution(agencyData, quizScore, quizLevel) {
         if (isUnregistered) {
             reasons.push(`The agency "${agencyData.name}" was NOT FOUND in official DoFE government records — this is a critical red flag.`);
         } else {
-            reasons.push(`Agency license status is suspended or revoked in DoFE records.`);
+            reasons.push(`Agency license status is blocked, suspended, or revoked in DoFE records.`);
         }
         if (quizLevel === 'High' || quizLevel === 'Medium') {
             reasons.push(`Additionally, your offer details flagged ${quizScore} points in scam warning patterns.`);
@@ -338,7 +388,6 @@ function calculateCombinedPrecaution(agencyData, quizScore, quizLevel) {
         action: 'This offer shows no major red flags. Still get everything in writing before paying anything.'
     };
 }
-
 function renderWizardResult() {
     const res = wizardState.precautionResult;
     const banner = document.getElementById('wizPrecautionBanner');
@@ -443,14 +492,15 @@ function renderSearchResults(results, query, matchFound) {
     }
 
     resultsContainer.innerHTML = results.map((item, index) => {
-        const status = item.ui_status;
-        const reports = item.community_reports;
+        const status = getAgencyUIStatus(item);
+        const reports = item.community_reports || { total_count: 0, avg_risk_level: "N/A", list: [] };
         
         let badgeStyle = "bg-emerald-50 text-emerald-800 border-emerald-300";
         let cardBorder = "border-slate-200";
         
         if (status.color === 'yellow') {
             badgeStyle = "bg-amber-50 text-amber-800 border-amber-300";
+            cardBorder = "border-amber-300";
         } else if (status.color === 'red') {
             badgeStyle = "bg-red-50 text-red-800 border-red-300 font-bold";
             cardBorder = "border-red-300";
@@ -566,12 +616,12 @@ function toggleReportsList(index) {
 // MODAL HANDLERS
 function openShareModal(index) {
     const item = currentSearchResults[index];
-    const text = `VERIFICATION CHECK: Agency Shield Nepal\n\nAgency: ${item.name}\nLicense #: ${item.permission_no || 'N/A'}\nStatus: ${item.ui_status.label}\nDistrict: ${item.district || 'N/A'}\nPhone: ${item.telephone || item.mobile || 'N/A'}\n\nChecked via Agency Shield (Official DoFE Data). Verify before paying fees!`;
+    const status = getAgencyUIStatus(item);
+    const text = `VERIFICATION CHECK: Agency Shield Nepal\n\nAgency: ${item.name}\nLicense #: ${item.permission_no || 'N/A'}\nStatus: ${status.label}\nDistrict: ${item.district || 'N/A'}\nPhone: ${item.telephone || item.mobile || 'N/A'}\n\nChecked via Agency Shield (Official DoFE Data). Verify before paying fees!`;
     
     document.getElementById('shareTextarea').value = text;
     document.getElementById('shareModal').classList.remove('hidden');
 }
-
 document.getElementById('copyShareBtn').onclick = () => {
     const textarea = document.getElementById('shareTextarea');
     textarea.select();

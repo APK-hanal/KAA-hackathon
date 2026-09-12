@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agency Shield — Nepal Manpower & Job Offer Verifier</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between">
 
@@ -34,194 +34,163 @@
     <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-1">
 
         <!-- ================= LANDING PAGE VIEW ================= -->
-        <section id="landingView" class="space-y-10">
-            <!-- Hero Section -->
-            <div class="text-center max-w-2xl mx-auto pt-2">
-                <span class="inline-flex items-center gap-1.5 bg-slate-100 text-slate-700 text-xs font-semibold px-3 py-1 rounded-full border border-slate-300 mb-4">
-                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    Integrated with Nepal DoFE Official Government Database
-                </span>
-                <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                    Check any manpower agency before you pay a single rupee.
-                </h1>
-                <p class="mt-3 text-slate-600 text-sm sm:text-base leading-relaxed">
-                    Protect migrant workers and families from fraud. Verify official agency license status and score job offer scam risks in under a minute.
-                </p>
+        <!-- LANDING VIEW (PHASE 1 VISUAL POLISH) -->
+<section id="landingView" class="space-y-6 sm:space-y-8 max-w-4xl mx-auto">
+    
+    <!-- HERO & CORE CTA SECTION (MUST REMAIN ABOVE THE FOLD) -->
+    <div class="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-sm text-center space-y-6">
+        <div class="space-y-2 max-w-2xl mx-auto">
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700">
+                <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                Nepal Foreign Employment Verification
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                Protect Yourself Before Paying Any Agency
+            </h1>
+            <p class="text-sm sm:text-base text-slate-600 leading-relaxed">
+                Check agency licenses, spot scam warning signs, and verify job offer legitimacy in seconds.
+            </p>
+        </div>
 
-                <!-- Call to Action Buttons -->
-                <div class="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
-                    <button onclick="navTo('wizard')" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-6 py-3.5 rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2">
-                        <span>Analyze Your Job Offer</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </button>
-                    <button onclick="navTo('search')" class="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-700 font-semibold text-sm px-5 py-3.5 rounded-lg border border-slate-300 transition-colors">
-                        Just Search an Agency
-                    </button>
-                </div>
-            </div>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <button onclick="navTo('wizard')" class="w-full sm:w-auto h-11 px-6 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 flex items-center justify-center gap-2">
+                <span>Analyze Your Offer</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+            <button onclick="navTo('search')" class="w-full sm:w-auto h-11 px-6 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm transition-all focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 flex items-center justify-center">
+                Just search an agency
+            </button>
+        </div>
+    </div>
 
-            <!-- Explainer Steps (3 Cards) -->
-            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
-                <h2 class="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-6">How Agency Shield Works</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
-                        <div class="w-9 h-9 bg-slate-200 text-slate-800 rounded-lg flex items-center justify-center font-bold text-sm mb-3">1</div>
-                        <h3 class="font-bold text-slate-900 text-sm mb-1">Enter Offer Details</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">Enter destination country, offered salary, and type any agency name.</p>
-                    </div>
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
-                        <div class="w-9 h-9 bg-slate-200 text-slate-800 rounded-lg flex items-center justify-center font-bold text-sm mb-3">2</div>
-                        <h3 class="font-bold text-slate-900 text-sm mb-1">Real-time DoFE Check</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">Queries ~1,700 official license records from Department of Foreign Employment.</p>
-                    </div>
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200">
-                        <div class="w-9 h-9 bg-slate-200 text-slate-800 rounded-lg flex items-center justify-center font-bold text-sm mb-3">3</div>
-                        <h3 class="font-bold text-slate-900 text-sm mb-1">Precaution Level & Steps</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">Get a combined risk rating (Low/Medium/High) and plain-language action steps.</p>
-                    </div>
-                </div>
+    <!-- SECTION 1: THE REAL SCALE OF THE PROBLEM -->
+    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">The Real Scale of the Problem</span>
+            <p class="text-xs text-slate-500 mt-0.5">Key figures on foreign employment recruitment fraud in Nepal.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 text-center space-y-1">
+                <span class="text-2xl font-extrabold text-slate-900 block">15,904</span>
+                <span class="text-xs font-semibold text-slate-700 block">reported fraud complaints</span>
+                <p class="text-[11px] text-slate-500">DoFE / NIDA Reports</p>
             </div>
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 text-center space-y-1">
+                <span class="text-2xl font-extrabold text-slate-900 block">Rs 8–10 lakh</span>
+                <span class="text-xs font-semibold text-slate-700 block">often involved in individual cases</span>
+                <p class="text-[11px] text-slate-500">Financial Audit Data</p>
+            </div>
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 text-center space-y-1">
+                <span class="text-2xl font-extrabold text-slate-900 block">40%</span>
+                <span class="text-xs font-semibold text-slate-700 block">of surveyed job-seekers used illegal agents</span>
+                <p class="text-[11px] text-slate-500">Field Research Data</p>
+            </div>
+        </div>
+    </div>
 
-            <!-- Civic Context Banner -->
-            <div class="bg-slate-900 text-slate-300 rounded-xl p-6 border border-slate-800">
-                <div class="max-w-2xl mx-auto text-center space-y-2">
-                    <h3 class="text-sm font-bold text-white uppercase tracking-wider">Why Verification Matters</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">
-                        Thousands of Nepali jobseekers lose savings every year to unregistered sub-agents or fake foreign job offers. Agency Shield bridges the gap by making official license data fast, transparent, and simple to verify.
-                    </p>
-                </div>
+    <!-- SECTION 2: HOW SCAMS ACTUALLY HAPPEN -->
+    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">How Scams Actually Happen</span>
+            <p class="text-xs text-slate-500 mt-0.5">Common pattern of fraudulent recruitment operations.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                <div class="w-7 h-7 bg-slate-200 text-slate-800 rounded font-bold text-xs flex items-center justify-center">1</div>
+                <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Unsolicited Offer</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">A sub-agent or social media post promises high wages abroad with guaranteed selection.</p>
             </div>
-        <!-- SECTION 1: THE REAL SCALE OF THE PROBLEM -->
-            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
-                <div>
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">The Real Scale of the Problem</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Key figures on foreign employment recruitment fraud in Nepal.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 text-center space-y-1">
-                        <span class="text-2xl font-extrabold text-slate-900 block">15,904</span>
-                        <span class="text-xs font-semibold text-slate-700 block">Foreign-employment fraud complaints</span>
-                        <p class="text-[11px] text-slate-500">[Source placeholder: DoFE / NIDA Reports]</p>
-                    </div>
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 text-center space-y-1">
-                        <span class="text-2xl font-extrabold text-slate-900 block">Rs 8–10 lakh</span>
-                        <span class="text-xs font-semibold text-slate-700 block">Average Financial Loss per Victim</span>
-                        <p class="text-[11px] text-slate-500">[Source placeholder: Financial Audit Data  / Supreme Court judgments]</p>
-                    </div>
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 text-center space-y-1">
-                        <span class="text-2xl font-extrabold text-slate-900 block">40%</span>
-                        <span class="text-xs font-semibold text-slate-700 block">People seeking foreign employment used illegal agents</span>
-                        <p class="text-[11px] text-slate-500">[Source placeholder: Field Research Data]</p>
-                    </div>
-                </div>
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                <div class="w-7 h-7 bg-slate-200 text-slate-800 rounded font-bold text-xs flex items-center justify-center">2</div>
+                <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Pressure & Urgency</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">You are pushed to pay cash deposits immediately under claims that visa slots expire today.</p>
             </div>
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                <div class="w-7 h-7 bg-slate-200 text-slate-800 rounded font-bold text-xs flex items-center justify-center">3</div>
+                <h3 class="font-bold text-slate-900 text-xs sm:text-sm">Payment Without Contract</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">Funds are transferred to personal accounts without legally binding DoFE documentation.</p>
+            </div>
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                <div class="w-7 h-7 bg-slate-200 text-slate-800 rounded font-bold text-xs flex items-center justify-center">4</div>
+                <h3 class="font-bold text-slate-900 text-xs sm:text-sm">False Departure</h3>
+                <p class="text-xs text-slate-600 leading-relaxed">Workers arrive on tourist visas or face non-existent jobs without legal protection.</p>
+            </div>
+        </div>
+    </div>
 
-            <!-- SECTION 2: HOW SCAMS ACTUALLY HAPPEN -->
-            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
-                <div>
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">How Scams Actually Happen</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Common pattern of fraudulent recruitment operations.</p>
+    <!-- SECTION 3: WHAT MAKES THIS DIFFERENT -->
+    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">What Makes Agency Shield Different</span>
+            <p class="text-xs text-slate-500 mt-0.5">Why automated verification beats manual database searches.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                <div class="flex items-center gap-2 font-bold text-slate-900 text-xs sm:text-sm">
+                    <svg class="w-4 h-4 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    Manual Government Portal Search
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-                        <div class="w-7 h-7 bg-slate-200 text-slate-800 rounded font-bold text-xs flex items-center justify-center">1</div>
-                        <h3 class="font-bold text-slate-900 text-xs">Unsolicited Offer</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">A sub-agent or social media post promises high wages abroad with guaranteed selection.</p>
-                    </div>
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-                        <div class="w-7 h-7 bg-slate-200 text-slate-800 rounded font-bold text-xs flex items-center justify-center">2</div>
-                        <h3 class="font-bold text-slate-900 text-xs">Pressure & Urgency</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">You are pushed to pay cash deposits immediately under claims that visa slots expire today.</p>
-                    </div>
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-                        <div class="w-7 h-7 bg-slate-200 text-slate-800 rounded font-bold text-xs flex items-center justify-center">3</div>
-                        <h3 class="font-bold text-slate-900 text-xs">Payment Without Contract</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">Funds are transferred to personal accounts without legally binding DoFE documentation.</p>
-                    </div>
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-                        <div class="w-7 h-7 bg-slate-200 text-slate-800 rounded font-bold text-xs flex items-center justify-center">4</div>
-                        <h3 class="font-bold text-slate-900 text-xs">False Departure</h3>
-                        <p class="text-xs text-slate-600 leading-relaxed">Workers arrive on tourist visas or face non-existent jobs without legal protection.</p>
-                    </div>
-                </div>
+                <ul class="space-y-1.5 text-slate-600 list-disc pl-5 leading-relaxed">
+                    <li>Requires exact legal agency spelling or license number to return results.</li>
+                    <li>Strict dropdown lookup blocks verifying unregistered sub-agents.</li>
+                    <li>Provides raw tabular data without actionable risk interpretation.</li>
+                </ul>
             </div>
-
-            <!-- SECTION 3: WHAT MAKES THIS DIFFERENT -->
-            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
-                <div>
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">What Makes Agency Shield Different</h2>
-                    <p class="text-xs text-slate-500 mt-0.5">Why automated verification beats manual database searches.</p>
+            <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
+                <div class="flex items-center gap-2 font-bold text-slate-900 text-xs sm:text-sm">
+                    <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    Agency Shield Verification
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-                        <div class="flex items-center gap-2 font-bold text-slate-900">
-                            <svg class="w-4 h-4 text-red-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                            Manual Government Portal Search
-                        </div>
-                        <ul class="space-y-1.5 text-slate-600 list-disc pl-5 leading-relaxed">
-                            <li>Requires exact legal agency spelling or license number to return results.</li>
-                            <li>Strict dropdown lookup blocks verifying unregistered sub-agents.</li>
-                            <li>Provides raw tabular data without actionable risk interpretation.</li>
-                        </ul>
-                    </div>
-                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-                        <div class="flex items-center gap-2 font-bold text-slate-900">
-                            <svg class="w-4 h-4 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                            Agency Shield Verification
-                        </div>
-                        <ul class="space-y-1.5 text-slate-600 list-disc pl-5 leading-relaxed">
-                            <li>Free-text input checks any broker name or typo with fuzzy matching.</li>
-                            <li>Unregistered entities automatically trigger High Risk precaution warnings.</li>
-                            <li>Combines official DoFE data with real user scam pattern evaluations.</li>
-                        </ul>
-                    </div>
-                </div>
+                <ul class="space-y-1.5 text-slate-600 list-disc pl-5 leading-relaxed">
+                    <li>Free-text input checks any broker name or typo with fuzzy matching.</li>
+                    <li>Unregistered entities automatically trigger High Risk precaution warnings.</li>
+                    <li>Combines official DoFE data with real user scam pattern evaluations.</li>
+                </ul>
             </div>
+        </div>
+    </div>
 
-            <!-- SECTION 4: DATA SOURCE CREDIBILITY -->
-            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-3">
-                <div class="flex items-center gap-2 text-slate-900">
-                    <svg class="w-5 h-5 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                    <h2 class="text-sm font-bold text-slate-900">Official Data Source & Status Meaning</h2>
-                </div>
-                <p class="text-xs text-slate-600 leading-relaxed">
-                    Agency licensing records are queried directly from public data published by <strong>Nepal's Department of Foreign Employment (DoFE)</strong>. Status designations reflect official government database parameters:
-                </p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-xs">
-                    <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-                        <span class="font-bold text-emerald-800 block mb-1">Active & Registered</span>
-                        <span class="text-slate-600 text-[11px]">Agency holds a valid active license with verified phone and location records.</span>
-                    </div>
-                    <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                        <span class="font-bold text-amber-800 block mb-1">Incomplete Contact Data</span>
-                        <span class="text-slate-600 text-[11px]">Listed as active in registry, but missing verified phone or office records.</span>
-                    </div>
-                    <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
-                        <span class="font-bold text-red-800 block mb-1">Not Found / Suspended</span>
-                        <span class="text-slate-600 text-[11px]">Entity is not in DoFE records or operating under a canceled license.</span>
-                    </div>
-                </div>
+    <!-- SECTION 4: DATA SOURCE CREDIBILITY -->
+    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center gap-2 text-slate-900">
+            <svg class="w-5 h-5 text-slate-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+            <h2 class="text-sm font-bold text-slate-900">Official Data Source & Status Meaning</h2>
+        </div>
+        <p class="text-xs text-slate-600 leading-relaxed">
+            Agency licensing records are queried directly from public data published by <strong>Nepal's Department of Foreign Employment (DoFE)</strong>. Status designations reflect official government database parameters:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-xs">
+            <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                <span class="font-bold text-emerald-800 block mb-1">Active & Registered</span>
+                <span class="text-slate-600 text-[11px]">Agency holds a valid active license with verified phone and location records.</span>
             </div>
-
-            <!-- SECTION 5: COMMUNITY REPORTS PREVIEW -->
-            <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">Community Safety Reports</h2>
-                        <p class="text-xs font-bold text-slate-900 mt-0.5">Recent User Offer Evaluations & Risk Signals</p>
-                    </div>
-                    <button onclick="navTo('search')" class="text-xs font-semibold text-blue-700 hover:underline flex items-center gap-1">
-                        Browse Registry Reports →
-                    </button>
-                </div>
-                <div id="landingReportsPreviewContainer" class="space-y-2">
-                    <!-- Populated dynamically by app.js -->
-                </div>
+            <div class="p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <span class="font-bold text-amber-800 block mb-1">Incomplete Contact Data</span>
+                <span class="text-slate-600 text-[11px]">Listed as active in registry, but missing verified phone or office records.</span>
             </div>
-        </section>
+            <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                <span class="font-bold text-red-800 block mb-1">Not Found / Suspended</span>
+                <span class="text-slate-600 text-[11px]">Entity is not in DoFE records or operating under a canceled license.</span>
+            </div>
+        </div>
+    </div>
 
+    <!-- SECTION 5: COMMUNITY REPORTS PREVIEW -->
+    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block">Community Safety Reports</span>
+                <p class="text-xs font-bold text-slate-900 mt-0.5">Recent User Offer Evaluations & Risk Signals</p>
+            </div>
+            <button onclick="navTo('search')" class="text-xs font-semibold text-slate-900 hover:text-slate-700 flex items-center gap-1 transition-colors">
+                Browse Registry Reports →
+            </button>
+        </div>
+        <div id="landingReportsPreviewContainer" class="space-y-2">
+            <!-- Dynamic helper output from app.js -->
+        </div>
+    </div>
+</section>
 
         <!-- ================= GUIDED WIZARD FLOW VIEW ================= -->
         <section id="wizardView" class="hidden max-w-2xl mx-auto space-y-6">
@@ -359,37 +328,36 @@
         </section>
 
 
-        <!-- ================= STANDALONE SEARCH VIEW ================= -->
-        <section id="searchView" class="hidden space-y-6">
-            <div class="text-center mb-4">
-                <h1 class="text-2xl font-bold text-slate-900">DoFE Licensed Agency Registry</h1>
-                <p class="text-xs text-slate-600 mt-1">Direct lookup across ~1,700 registered Nepali manpower agencies.</p>
-            </div>
+<!-- SEARCH VIEW (PHASE 2 VISUAL POLISH) -->
+<section id="searchView" class="hidden space-y-6 sm:space-y-8 max-w-4xl mx-auto">
+    <div class="text-center space-y-1.5 max-w-2xl mx-auto">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">DoFE Licensed Agency Registry</h1>
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">Direct lookup across ~1,700 registered Nepali manpower agencies.</p>
+    </div>
 
-            <!-- Search Bar -->
-            <div class="bg-white rounded-xl border border-slate-200 p-4">
-                <form id="searchForm" class="flex flex-col sm:flex-row gap-2.5">
-                    <input 
-                        type="text" 
-                        id="searchInput" 
-                        placeholder="Type agency name (e.g. Talent Finder) or license #..." 
-                        class="flex-1 px-3.5 py-2.5 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 font-medium text-slate-800 text-sm"
-                        required
-                    >
-                    <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm">
-                        Verify Agency
-                    </button>
-                </form>
-            </div>
+    <!-- Search Bar Surface -->
+    <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 sm:p-6">
+        <form id="searchForm" class="flex flex-col sm:flex-row gap-3">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Type agency name (e.g. Talent Finder) or license #..." 
+                class="flex-1 px-3.5 py-2.5 rounded-lg border border-slate-300 text-slate-900 placeholder:text-slate-400 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900 transition-all"
+                required
+            >
+            <button type="submit" class="h-10 sm:h-auto px-6 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 flex items-center justify-center shrink-0">
+                Verify Agency
+            </button>
+        </form>
+    </div>
 
-            <!-- Results -->
-            <div id="resultsContainer" class="space-y-4">
-                <div class="text-center py-10 text-slate-500 text-xs">
-                    Enter an agency name or license number above to perform an official DoFE query.
-                </div>
-            </div>
-        </section>
-
+    <!-- Results Container & Initial State -->
+    <div id="resultsContainer" class="space-y-4">
+        <div class="p-8 sm:p-10 text-center rounded-xl bg-slate-50 border border-slate-200/80 text-slate-500 text-xs sm:text-sm">
+            Enter an agency name or license number above to perform an official DoFE query.
+        </div>
+    </div>
+</section>
     </main>
 
     <!-- CIVIC FOOTER -->
