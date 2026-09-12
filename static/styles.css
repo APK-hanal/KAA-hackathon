@@ -1,18 +1,59 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-body {
-    font-family: 'Inter', sans-serif;
+:root {
+  --canvas: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --brand-primary: #0f172a;
+  --brand-accent: #1d4ed8;
+  
+  --risk-low-bg: #f0fdf4;
+  --risk-low-border: #bbf7d0;
+  --risk-low-text: #15803d;
+  
+  --risk-med-bg: #fffbeb;
+  --risk-med-border: #fef3c7;
+  --risk-med-text: #b45309;
+  
+  --risk-high-bg: #fef2f2;
+  --risk-high-border: #fecaca;
+  --risk-high-text: #b91c1c;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--canvas);
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+}
+
+/* Modal Overlay */
 .modal-backdrop {
     background-color: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(2px);
 }
 
+/* Risk Progress Bar */
 .risk-meter-bar {
-    transition: width 0.4s ease-in-out, background-color 0.4s ease-in-out;
+    transition: width 0.35s ease-out, background-color 0.35s ease-out;
 }
 
+/* Autocomplete Dropdown */
+.autocomplete-dropdown {
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 50;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollbar styling */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
 }
@@ -21,12 +62,5 @@ body {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #cbd5e1;
-    border-radius: 3px;
-}
-
-/* Autocomplete suggestion box styling */
-.autocomplete-dropdown {
-    max-height: 220px;
-    overflow-y: auto;
-    z-index: 40;
+    border-radius: 4px;
 }

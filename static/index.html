@@ -3,215 +3,365 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agency Shield — Nepal Manpower & Overseas Job Offer Verifier</title>
+    <title>Agency Shield — Nepal Foreign Employment Safety & Verifier</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col justify-between">
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col justify-between">
 
-    <!-- Navbar -->
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
-        <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center gap-2 cursor-pointer" onclick="navTo('landing')">
-                <span class="text-2xl">🛡️</span>
-                <span class="font-black text-lg text-slate-900 tracking-tight">Agency Shield <span class="text-blue-600 text-xs font-semibold px-2 py-0.5 bg-blue-50 rounded border border-blue-200">Nepal</span></span>
+    <!-- CIVIC NAVBAR -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="navTo('landing')">
+                <div class="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <span class="font-extrabold text-slate-900 tracking-tight text-lg block leading-tight">Agency Shield</span>
+                    <span class="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">Nepal Foreign Employment Protection</span>
+                </div>
             </div>
-            <div class="flex items-center gap-3 text-xs sm:text-sm font-semibold">
-                <button onclick="navTo('wizard')" class="text-slate-700 hover:text-blue-600 transition-colors">Analyze Offer</button>
-                <button onclick="navTo('search')" class="text-slate-700 hover:text-blue-600 transition-colors">Agency Registry</button>
+            <div class="flex items-center gap-6 text-sm font-semibold">
+                <button onclick="navTo('landing')" class="text-slate-600 hover:text-slate-900 transition-colors hidden sm:block">Home</button>
+                <button onclick="navTo('wizard')" class="text-slate-600 hover:text-blue-700 transition-colors">Analyze Offer</button>
+                <button onclick="navTo('search')" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg transition-colors text-xs font-bold">
+                    Registry Search
+                </button>
             </div>
         </div>
     </nav>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-1">
+    <!-- MAIN APP CONTAINER -->
+    <main class="max-w-5xl mx-auto px-4 sm:px-6 py-12 w-full flex-1">
 
         <!-- ================= LANDING PAGE VIEW ================= -->
-        <section id="landingView" class="space-y-12">
-            <!-- Hero Header -->
-            <div class="text-center max-w-2xl mx-auto pt-4">
-                <span class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4 border border-emerald-300">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Official DoFE Government Registry Integrated
+        <section id="landingView" class="space-y-16">
+            
+            <!-- Hero Section -->
+            <div class="text-center max-w-3xl mx-auto pt-4 space-y-6">
+                <span class="inline-flex items-center gap-2 bg-emerald-50 text-emerald-800 text-xs font-bold px-3.5 py-1.5 rounded-full border border-emerald-200">
+                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Synced with Official Department of Foreign Employment (DoFE) Registry
                 </span>
-                <h1 class="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-                    Check any manpower agency before you pay a single rupee.
+
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    Verify any recruiting agency before paying a single rupee.
                 </h1>
-                <p class="mt-4 text-slate-600 text-base sm:text-lg leading-relaxed">
-                    Protect your family from foreign employment fraud. Verify agency licenses and assess job offer risk in under 60 seconds.
+
+                <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+                    Protect migrant workers and families from fraud. Check official government license status and score job offer scam risks in under a minute.
                 </p>
 
                 <!-- Call to Action Buttons -->
-                <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <button onclick="navTo('wizard')" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold text-base px-8 py-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        <span>🔍 Analyze Your Job Offer</span>
-                        <span>→</span>
+                <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <button onclick="navTo('wizard')" class="w-full sm:w-auto bg-slate-900 hover:bg-slate-800 text-white font-semibold text-base px-8 py-4 rounded-xl shadow-md transition-all flex items-center justify-center gap-3">
+                        <span>Analyze Your Job Offer</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                     </button>
-                    <button onclick="navTo('search')" class="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-700 font-bold text-sm px-6 py-4 rounded-xl border border-slate-300 transition-colors">
-                        Just Search an Agency
+                    <button onclick="navTo('search')" class="w-full sm:w-auto bg-white hover:bg-slate-100 text-slate-700 font-semibold text-base px-7 py-4 rounded-xl border border-slate-300 shadow-sm transition-all">
+                        Search Agency Registry
                     </button>
                 </div>
             </div>
 
-            <!-- How It Works (3 Steps) -->
-            <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm">
-                <h2 class="text-center text-xs font-bold uppercase tracking-widest text-slate-400 mb-8">How Agency Shield Protects You</h2>
+            <!-- Metrics & Key Statistics Bar -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 border-y border-slate-200 py-8">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 text-center space-y-1">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-slate-900">1,700+</div>
+                    <div class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Registered Agencies Indexed</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 text-center space-y-1">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-slate-900">80% Similarity</div>
+                    <div class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Strict Unregistered Cut-off</div>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 text-center space-y-1">
+                    <div class="text-2xl sm:text-3xl font-extrabold text-slate-900">100% Free</div>
+                    <div class="text-xs font-semibold uppercase text-slate-500 tracking-wider">Public & Open Access</div>
+                </div>
+            </div>
+
+            <!-- Explainer Steps (3 Cards) -->
+            <div class="space-y-6">
+                <div class="text-center space-y-1">
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">Verification Process</h2>
+                    <h3 class="text-2xl font-bold text-slate-900">How Agency Shield Protects You</h3>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
-                        <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center mx-auto text-xl font-bold mb-3">1</div>
-                        <h3 class="font-bold text-slate-900 mb-1">Enter Offer Details</h3>
-                        <p class="text-xs text-slate-600">Provide the destination country, promised salary, and recruiting agency name.</p>
+                    <div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm space-y-3">
+                        <div class="w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-base">1</div>
+                        <h4 class="font-bold text-slate-900 text-base">Enter Job & Agency Name</h4>
+                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">Type any manpower company name or sub-agent title. Free-text entry allows checking unregistered names.</p>
                     </div>
-                    <div class="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
-                        <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center mx-auto text-xl font-bold mb-3">2</div>
-                        <h3 class="font-bold text-slate-900 mb-1">Real-time DoFE Check</h3>
-                        <p class="text-xs text-slate-600">We query ~1,700 official license records from Nepal's Dept. of Foreign Employment.</p>
+                    <div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm space-y-3">
+                        <div class="w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-base">2</div>
+                        <h4 class="font-bold text-slate-900 text-base">Instant DoFE Cross-Check</h4>
+                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">Queries government license records to verify active status, registered district, and license validity.</p>
                     </div>
-                    <div class="text-center p-4 rounded-xl bg-slate-50 border border-slate-100">
-                        <div class="w-12 h-12 bg-blue-100 text-blue-700 rounded-full flex items-center justify-center mx-auto text-xl font-bold mb-3">3</div>
-                        <h3 class="font-bold text-slate-900 mb-1">Precaution Guidance</h3>
-                        <p class="text-xs text-slate-600">Get a clear Precaution Level (Low/Medium/High) and exact safety steps to follow next.</p>
+                    <div class="p-6 rounded-xl bg-white border border-slate-200 shadow-sm space-y-3">
+                        <div class="w-10 h-10 bg-slate-900 text-white rounded-lg flex items-center justify-center font-bold text-base">3</div>
+                        <h4 class="font-bold text-slate-900 text-base">Risk Assessment & Steps</h4>
+                        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">Calculates combined Precaution Level (Low, Medium, or High Risk) with actionable advice before paying money.</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Why This Matters Section -->
-            <div class="bg-slate-900 text-slate-300 rounded-2xl p-6 sm:p-8 border border-slate-800">
-                <div class="max-w-2xl mx-auto text-center">
-                    <h3 class="text-lg font-bold text-white mb-2">Why This Verification Matters</h3>
-                    <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                        Thousands of Nepali migrant workers lose life savings each year to unregistered brokers or fake foreign job offers. Agency Shield bridges the gap by making official verification fast, transparent, and accessible to families across basic phones and web browsers.
-                    </p>
+            <!-- Common Scam Red Flags Grid -->
+            <div class="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
+                <div class="space-y-1">
+                    <span class="text-xs font-bold uppercase tracking-widest text-red-700">Warning Signals</span>
+                    <h3 class="text-xl sm:text-2xl font-bold text-slate-900">Top 4 Foreign Employment Scam Patterns</h3>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-4 rounded-lg bg-red-50 border border-red-200 space-y-1">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                            <svg class="w-4 h-4 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Advance Cash Without Official Receipt
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed">Demanding cash advances prior to issuing pre-approval labor permits or official receipts is prohibited under Nepal law.</p>
+                    </div>
+
+                    <div class="p-4 rounded-lg bg-red-50 border border-red-200 space-y-1">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                            <svg class="w-4 h-4 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Unregistered Individual Sub-Agents
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed">Working through individual brokers who lack official agency authorization letters or office locations carries high financial risk.</p>
+                    </div>
+
+                    <div class="p-4 rounded-lg bg-red-50 border border-red-200 space-y-1">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                            <svg class="w-4 h-4 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Travel on Tourist / Visit Visas
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed">Promising to convert a visit visa into a work visa after departure bypasses DoFE insurance and legal protections.</p>
+                    </div>
+
+                    <div class="p-4 rounded-lg bg-red-50 border border-red-200 space-y-1">
+                        <div class="flex items-center gap-2 font-bold text-slate-900 text-sm">
+                            <svg class="w-4 h-4 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Exaggerated Salary Guarantees
+                        </div>
+                        <p class="text-xs text-slate-700 leading-relaxed">Promising wages significantly higher than official bilateral agreements without requiring skill verification.</p>
+                    </div>
                 </div>
             </div>
+
+            <!-- Frequently Asked Questions (FAQ Accordion) -->
+            <div class="space-y-6">
+                <div class="text-center space-y-1">
+                    <h2 class="text-xs font-bold uppercase tracking-widest text-slate-400">Knowledge Base</h2>
+                    <h3 class="text-2xl font-bold text-slate-900">Frequently Asked Questions</h3>
+                </div>
+
+                <div class="space-y-3">
+                    <details class="bg-white border border-slate-200 rounded-xl p-4 [&_svg]:open:-rotate-180 transition-all cursor-pointer">
+                        <summary class="font-bold text-slate-900 text-sm flex justify-between items-center list-none">
+                            <span>What happens if an agency is not found in the database?</span>
+                            <svg class="w-4 h-4 text-slate-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed border-t border-slate-100 pt-3">
+                            If a searched name scores below our 80% similarity threshold against official DoFE records, Agency Shield automatically flags it as <strong>NOT FOUND IN DOFE REGISTRY</strong>. This triggers an automatic High Risk precaution warning because operating foreign employment recruitment without a government license is illegal in Nepal.
+                        </p>
+                    </details>
+
+                    <details class="bg-white border border-slate-200 rounded-xl p-4 [&_svg]:open:-rotate-180 transition-all cursor-pointer">
+                        <summary class="font-bold text-slate-900 text-sm flex justify-between items-center list-none">
+                            <span>What is the "Free Visa, Free Ticket" policy in Nepal?</span>
+                            <svg class="w-4 h-4 text-slate-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed border-t border-slate-100 pt-3">
+                            Under Nepal government guidelines for major Gulf countries and Malaysia, foreign employers are required to cover visa and airfare costs. Manpower agencies can charge a maximum service fee capped by law (typically 10,000 NPR) only when an official receipt is provided.
+                        </p>
+                    </details>
+
+                    <details class="bg-white border border-slate-200 rounded-xl p-4 [&_svg]:open:-rotate-180 transition-all cursor-pointer">
+                        <summary class="font-bold text-slate-900 text-sm flex justify-between items-center list-none">
+                            <span>How does the feature phone SMS verification work?</span>
+                            <svg class="w-4 h-4 text-slate-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed border-t border-slate-100 pt-3">
+                            Users without smartphones or internet access can text an agency name or license number to our SMS gateway. The system runs an instant lookup and replies with license status, district, and contact details in plain text.
+                        </p>
+                    </details>
+
+                    <details class="bg-white border border-slate-200 rounded-xl p-4 [&_svg]:open:-rotate-180 transition-all cursor-pointer">
+                        <summary class="font-bold text-slate-900 text-sm flex justify-between items-center list-none">
+                            <span>Are community safety reports verified by government officials?</span>
+                            <svg class="w-4 h-4 text-slate-500 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </summary>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed border-t border-slate-100 pt-3">
+                            Community reports submitted on Agency Shield represent crowdsourced feedback from jobseekers. While registry license data comes directly from DoFE, community reports provide supplementary crowdsourced warning signals.
+                        </p>
+                    </details>
+                </div>
+            </div>
+
+            <!-- Official Emergency & Helpline Panel -->
+            <div class="bg-slate-900 text-slate-200 rounded-2xl p-6 sm:p-8 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-slate-800 pb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Nepal Government Official Emergency Contacts</h3>
+                        <p class="text-xs text-slate-400">Keep these official government emergency support numbers saved.</p>
+                    </div>
+                    <span class="px-3 py-1 bg-slate-800 border border-slate-700 rounded-full text-xs font-mono text-emerald-400 self-start sm:self-auto">Toll Free Support</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 text-xs">
+                    <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-800 space-y-1">
+                        <span class="text-slate-400 font-semibold block text-[10px] uppercase">Call Center (DoFE)</span>
+                        <strong class="text-white text-base block font-mono">16600150005</strong>
+                        <p class="text-slate-400 text-[11px]">Department of Foreign Employment Helpline</p>
+                    </div>
+                    <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-800 space-y-1">
+                        <span class="text-slate-400 font-semibold block text-[10px] uppercase">Foreign Employment Board</span>
+                        <strong class="text-white text-base block font-mono">+977-1-4104199</strong>
+                        <p class="text-slate-400 text-[11px]">Worker Welfare & Legal Relief Secretariat</p>
+                    </div>
+                    <div class="bg-slate-800/60 p-4 rounded-xl border border-slate-800 space-y-1">
+                        <span class="text-slate-400 font-semibold block text-[10px] uppercase">Shramadhan Call Center</span>
+                        <strong class="text-white text-base block font-mono">1114</strong>
+                        <p class="text-slate-400 text-[11px]">Ministry of Labour, Employment & Social Security</p>
+                    </div>
+                </div>
+            </div>
+
         </section>
 
 
         <!-- ================= GUIDED WIZARD FLOW VIEW ================= -->
-        <section id="wizardView" class="hidden max-w-2xl mx-auto space-y-6">
-            <!-- Progress Bar -->
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                <div class="flex justify-between items-center text-xs font-bold text-slate-600 mb-2">
+        <section id="wizardView" class="hidden max-w-3xl mx-auto space-y-8">
+            <!-- Progress Indicator -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center text-xs font-semibold text-slate-600 mb-2">
                     <span id="wizardStepLabel">Step 1 of 4</span>
                     <span id="wizardStepTitle">Offer Details</span>
                 </div>
-                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                    <div id="wizardProgressBar" class="bg-blue-600 h-full w-1/4 transition-all duration-300"></div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                    <div id="wizardProgressBar" class="bg-slate-900 h-full w-1/4 transition-all duration-300"></div>
                 </div>
             </div>
 
             <!-- STEP 1: Basic Offer Details -->
-            <div id="wizardStep1" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                <h2 class="text-xl font-bold text-slate-900">Step 1: Enter Offer Details</h2>
-                <p class="text-xs text-slate-500">Provide basic information about the job offer you or your relative received.</p>
+            <div id="wizardStep1" class="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Step 1: Offer Details</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Provide basic information about the foreign job offer and agency name.</p>
+                </div>
 
-                <div class="space-y-4 pt-2">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Destination Country</label>
-                        <input type="text" id="wizCountry" placeholder="e.g. UAE, Qatar, Malaysia, Saudi Arabia" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                <div class="space-y-4 pt-1">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Destination Country</label>
+                            <input type="text" id="wizCountry" placeholder="e.g. UAE, Qatar, Malaysia" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Job Title / Role</label>
+                            <input type="text" id="wizJobRole" placeholder="e.g. Security Guard, Factory Worker" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none">
+                        </div>
                     </div>
+
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Job Title / Role</label>
-                        <input type="text" id="wizJobRole" placeholder="e.g. Security Guard, Factory Worker, Waiter" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Offered Monthly Salary (NPR or USD)</label>
-                        <input type="text" id="wizSalary" placeholder="e.g. 50,000 NPR or 1200 AED" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Offered Monthly Salary</label>
+                        <input type="text" id="wizSalary" placeholder="e.g. 50,000 NPR or 1200 AED" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none">
                     </div>
                     
-                    <!-- Agency Autocomplete Search -->
+                    <!-- Free-Text Agency Input with Fuzzy Autocomplete -->
                     <div class="relative">
-                        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Recruiting Agency Name or License # *</label>
-                        <input type="text" id="wizAgencyInput" placeholder="Type agency name (e.g. Talent Finder)..." autocomplete="off" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium">
-                        <div id="wizAutocompleteList" class="autocomplete-dropdown hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-300 rounded-lg shadow-xl"></div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Recruiting Agency Name or License # *</label>
+                        <input type="text" id="wizAgencyInput" placeholder="Type ANY agency name (e.g. Talent Finder or sub-agent name)..." autocomplete="off" class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none font-medium">
+                        <p class="text-[11px] text-slate-500 mt-1">Free-text enabled. You can submit any name even if not found in registered records.</p>
+                        <div id="wizAutocompleteList" class="autocomplete-dropdown hidden absolute left-0 right-0 top-full mt-1 bg-white border border-slate-300 rounded-lg shadow-lg"></div>
                     </div>
 
-                    <div id="wizSelectedAgencyBadge" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs flex justify-between items-center">
+                    <div id="wizSelectedAgencyBadge" class="hidden p-4 bg-slate-50 border border-slate-300 rounded-lg text-xs flex justify-between items-center">
                         <div>
-                            <strong class="text-blue-900 block text-sm" id="wizSelectedAgencyName">Agency Name</strong>
-                            <span class="text-blue-700" id="wizSelectedAgencyLic">Lic #</span>
+                            <strong class="text-slate-900 block text-sm" id="wizSelectedAgencyName">Selected Agency</strong>
+                            <span class="text-slate-600" id="wizSelectedAgencyLic">Lic #</span>
                         </div>
-                        <button onclick="clearSelectedAgency()" class="text-blue-600 hover:text-blue-900 font-bold text-xs underline">Change</button>
+                        <button onclick="clearSelectedAgency()" class="text-blue-700 font-semibold text-xs hover:underline">Change Input</button>
                     </div>
                 </div>
 
-                <div class="pt-4 flex justify-end">
-                    <button onclick="goToWizardStep(2)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-6 py-3 rounded-lg shadow transition-colors">
-                        Next: Verify Agency →
+                <div class="pt-4 flex justify-end border-t border-slate-100">
+                    <button onclick="goToWizardStep(2)" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-6 py-3 rounded-lg transition-colors">
+                        Next: Verify License Status →
                     </button>
                 </div>
             </div>
 
-            <!-- STEP 2: Automatic Agency Verification -->
-            <div id="wizardStep2" class="hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-                <h2 class="text-xl font-bold text-slate-900">Step 2: DoFE Registry Check</h2>
-                <p class="text-xs text-slate-500">Official government license status evaluated automatically for your selected agency.</p>
-
-                <div id="wizAgencyVerificationCard" class="pt-2">
-                    <!-- Dynamic evaluation card injected here -->
+            <!-- STEP 2: Automatic Agency Verification Check -->
+            <div id="wizardStep2" class="hidden bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Step 2: DoFE Registration Assessment</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Official registry evaluation for your entered agency name.</p>
                 </div>
 
-                <div class="pt-4 flex justify-between items-center">
-                    <button onclick="goToWizardStep(1)" class="text-slate-600 hover:text-slate-900 font-semibold text-sm">← Back</button>
-                    <button onclick="goToWizardStep(3)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-6 py-3 rounded-lg shadow transition-colors">
+                <div id="wizAgencyVerificationCard" class="pt-1"></div>
+
+                <div class="pt-4 flex justify-between items-center border-t border-slate-100">
+                    <button onclick="goToWizardStep(1)" class="text-slate-600 hover:text-slate-900 font-semibold text-xs sm:text-sm">← Back to Details</button>
+                    <button onclick="goToWizardStep(3)" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-6 py-3 rounded-lg transition-colors">
                         Next: Scam Warning Questionnaire →
                     </button>
                 </div>
             </div>
 
             <!-- STEP 3: Risk Questionnaire -->
-            <div id="wizardStep3" class="hidden bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+            <div id="wizardStep3" class="hidden bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-6">
                 <div>
-                    <h2 class="text-xl font-bold text-slate-900">Step 3: Scam Warning Questionnaire</h2>
-                    <p class="text-xs text-slate-500 mt-1">Answer 7 quick questions regarding your interaction with the agency agent.</p>
+                    <h2 class="text-xl font-bold text-slate-900">Step 3: Offer Risk Questionnaire</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Answer 7 quick questions regarding payment demands and contract conditions.</p>
                 </div>
 
-                <form id="wizQuizForm" class="space-y-4">
-                    <!-- Questions injected dynamically -->
-                </form>
+                <form id="wizQuizForm" class="space-y-4"></form>
 
-                <div class="pt-2 flex justify-between items-center border-t border-slate-100">
-                    <button onclick="goToWizardStep(2)" class="text-slate-600 hover:text-slate-900 font-semibold text-sm">← Back</button>
-                    <button onclick="submitWizardAssessment()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-6 py-3 rounded-lg shadow transition-colors">
-                        Calculate Combined Precaution →
+                <div class="pt-4 flex justify-between items-center border-t border-slate-100">
+                    <button onclick="goToWizardStep(2)" class="text-slate-600 hover:text-slate-900 font-semibold text-xs sm:text-sm">← Back to License Check</button>
+                    <button onclick="submitWizardAssessment()" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm px-6 py-3 rounded-lg transition-colors">
+                        Calculate Precaution Level →
                     </button>
                 </div>
             </div>
 
-            <!-- STEP 4: Combined Result -->
-            <div id="wizardStep4" class="hidden bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-md space-y-6">
-                <!-- Result Banner -->
-                <div id="wizPrecautionBanner" class="p-6 rounded-xl border-2 text-center space-y-2">
-                    <!-- Injected dynamically -->
-                </div>
+            <!-- STEP 4: Combined Precaution Level Result -->
+            <div id="wizardStep4" class="hidden bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-sm space-y-6">
+                <!-- Banner -->
+                <div id="wizPrecautionBanner" class="p-6 rounded-xl border-2 text-center space-y-2"></div>
 
-                <!-- Driving Factors Breakdown -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Why You Received This Rating:</h4>
-                    <ul id="wizReasonsList" class="list-disc pl-5 text-xs sm:text-sm text-slate-700 space-y-1"></ul>
+                <!-- Driving Factors -->
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-2">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Evaluation Factors:</h4>
+                    <ul id="wizReasonsList" class="list-disc pl-5 text-xs sm:text-sm text-slate-700 space-y-1.5"></ul>
                 </div>
 
                 <!-- Next Concrete Actions -->
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 space-y-1">
-                    <h4 class="text-xs font-bold text-blue-900 uppercase tracking-wider">Recommended Next Action:</h4>
-                    <p id="wizActionAdvice" class="text-xs sm:text-sm text-blue-950 font-medium"></p>
+                <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-1">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">Recommended Action:</h4>
+                    <p id="wizActionAdvice" class="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed"></p>
                 </div>
 
                 <!-- Optional Community Report Submission -->
-                <div class="border-t border-slate-200 pt-4 space-y-3">
+                <div class="border-t border-slate-200 pt-5 space-y-3">
                     <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-700 uppercase">Help protect others:</span>
-                        <span class="text-xs text-slate-500">Anonymous submission</span>
+                        <span class="text-xs font-bold text-slate-700 uppercase">Submit Community Safety Report</span>
+                        <span class="text-[11px] text-slate-500">Anonymous & Public</span>
                     </div>
-                    <textarea id="wizReportComment" maxlength="300" rows="2" placeholder="Optional: Add details about cash requested or broker behavior (max 300 chars)..." class="w-full p-3 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+                    <textarea id="wizReportComment" maxlength="300" rows="3" placeholder="Add optional details regarding payment requested, broker behavior, or contract terms..." class="w-full p-3 border border-slate-300 rounded-lg text-xs sm:text-sm focus:ring-2 focus:ring-slate-900 focus:outline-none"></textarea>
                     
-                    <button id="wizSubmitReportBtn" onclick="submitWizardReport()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-sm transition-colors shadow">
+                    <button id="wizSubmitReportBtn" onclick="submitWizardReport()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-lg text-xs sm:text-sm transition-colors">
                         Submit as Anonymous Community Safety Report
                     </button>
                 </div>
 
                 <div class="pt-2 text-center">
-                    <button onclick="navTo('landing')" class="text-xs font-bold text-slate-500 hover:text-slate-800 underline">
-                        ← Start New Offer Analysis
+                    <button onclick="navTo('landing')" class="text-xs font-semibold text-slate-500 hover:text-slate-900 underline">
+                        ← Start New Offer Assessment
                     </button>
                 </div>
             </div>
@@ -219,76 +369,110 @@
 
 
         <!-- ================= STANDALONE SEARCH VIEW ================= -->
-        <section id="searchView" class="hidden space-y-6">
-            <div class="text-center mb-6">
-                <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900">DoFE Licensed Agency Registry</h1>
-                <p class="text-xs sm:text-sm text-slate-600 mt-1">Direct search across all ~1,700 registered Nepali recruitment agencies.</p>
+        <section id="searchView" class="hidden space-y-8 max-w-4xl mx-auto">
+            <div class="text-center space-y-2">
+                <h1 class="text-3xl font-extrabold text-slate-900">DoFE Licensed Agency Registry</h1>
+                <p class="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto">Query official Department of Foreign Employment license records across Nepal.</p>
             </div>
 
             <!-- Search Bar -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+            <div class="bg-white rounded-xl border border-slate-200 p-4 sm:p-5 shadow-sm">
                 <form id="searchForm" class="flex flex-col sm:flex-row gap-3">
                     <input 
                         type="text" 
                         id="searchInput" 
-                        placeholder="Type agency name (e.g. Talent Finder) or license # (e.g. 958/067/068)..." 
-                        class="flex-1 px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium text-slate-800 text-sm"
+                        placeholder="Type agency name (e.g. Talent Finder) or license #..." 
+                        class="flex-1 px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 font-medium text-slate-800 text-sm"
                         required
                     >
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-sm text-sm">
+                    <button type="submit" class="bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 rounded-lg transition-colors text-sm">
                         Verify Agency
                     </button>
                 </form>
             </div>
 
-            <!-- Results -->
-            <div id="resultsContainer" class="space-y-6">
-                <div class="text-center py-12 text-slate-500 text-xs sm:text-sm">
-                    Enter an agency name or license number above to perform an official DoFE query.
+            <!-- Results Container -->
+            <div id="resultsContainer" class="space-y-4">
+                <div class="text-center py-12 text-slate-500 text-xs sm:text-sm bg-white rounded-xl border border-slate-200 p-8">
+                    Enter an agency name or license number above to perform an official query.
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-6 px-4 border-t border-slate-800 text-center text-xs">
-        <p class="mb-2">Agency Shield Nepal — Open Data Verification Initiative for Foreign Employment Safety.</p>
-        <button id="openSmsModalBtn" class="bg-slate-800 hover:bg-slate-700 text-blue-400 border border-slate-700 font-semibold px-4 py-2 rounded-lg transition-colors">
-            📱 Open Feature Phone SMS Simulator
-        </button>
+    <!-- CIVIC FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 pt-12 pb-8 px-4 sm:px-6">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-800 text-xs">
+            <div class="space-y-3 md:col-span-2">
+                <div class="flex items-center gap-2 text-white font-bold text-base">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    Agency Shield Nepal
+                </div>
+                <p class="text-slate-400 leading-relaxed max-w-sm">
+                    Open-access verification initiative providing license verification and offer scam pattern scoring for foreign employment jobseekers.
+                </p>
+                <div class="pt-1">
+                    <button id="openSmsModalBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold px-3.5 py-2 rounded-lg transition-colors text-xs flex items-center gap-2">
+                        <span>📱 Open Feature Phone SMS Simulator</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <strong class="text-white uppercase tracking-wider text-[11px] block mb-1">Quick Navigation</strong>
+                <ul class="space-y-1.5 text-slate-400">
+                    <li><button onclick="navTo('landing')" class="hover:text-white">Home / Overview</button></li>
+                    <li><button onclick="navTo('wizard')" class="hover:text-white">Analyze Offer</button></li>
+                    <li><button onclick="navTo('search')" class="hover:text-white">Agency Registry Search</button></li>
+                </ul>
+            </div>
+
+            <div class="space-y-2">
+                <strong class="text-white uppercase tracking-wider text-[11px] block mb-1">Government Contacts</strong>
+                <ul class="space-y-1.5 text-slate-400 font-mono text-[11px]">
+                    <li>DoFE Helpline: 16600150005</li>
+                    <li>Shramadhan: 1114</li>
+                    <li>FEB Board: +977-1-4104199</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto pt-6 text-center text-[11px] text-slate-500">
+            Agency Shield Nepal — Public Information Platform. Data synced from Department of Foreign Employment.
+        </div>
     </footer>
 
     <!-- MODAL: STANDALONE QUESTIONNAIRE -->
     <div id="quizModal" class="fixed inset-0 modal-backdrop hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
-            <div class="bg-slate-900 text-white p-5 flex justify-between items-center">
+        <div class="bg-white rounded-xl shadow-xl max-w-xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-slate-200">
+            <div class="bg-slate-900 text-white p-4 flex justify-between items-center">
                 <div>
-                    <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Scam Risk Assessment</span>
-                    <h3 id="quizAgencyName" class="text-lg font-bold">Agency Risk Evaluation</h3>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Scam Risk Assessment</span>
+                    <h3 id="quizAgencyName" class="text-sm font-bold">Agency Risk Evaluation</h3>
                 </div>
-                <button id="closeQuizModalBtn" class="text-slate-400 hover:text-white font-bold text-2xl leading-none">&times;</button>
+                <button id="closeQuizModalBtn" class="text-slate-400 hover:text-white font-bold text-xl leading-none">&times;</button>
             </div>
-            <div class="p-6 overflow-y-auto space-y-6 custom-scrollbar flex-1">
-                <form id="quizForm" class="space-y-4"></form>
+            <div class="p-5 overflow-y-auto space-y-4 custom-scrollbar flex-1">
+                <form id="quizForm" class="space-y-3"></form>
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Optional Comment / Details (Max 300 chars)</label>
-                    <textarea id="quizComment" maxlength="300" rows="2" placeholder="e.g. Demanded upfront cash without receipt..." class="w-full p-3 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"></textarea>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase mb-1">Optional Comment / Details (Max 300 chars)</label>
+                    <textarea id="quizComment" maxlength="300" rows="2" placeholder="e.g. Demanded cash upfront without official receipt..." class="w-full p-2.5 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-slate-900 focus:outline-none"></textarea>
                 </div>
             </div>
-            <div class="bg-slate-50 p-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="bg-slate-50 p-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div class="w-full sm:w-1/2">
-                    <div class="flex justify-between items-center text-xs font-bold mb-1">
+                    <div class="flex justify-between items-center text-xs font-semibold mb-1">
                         <span>Risk Score:</span>
                         <span id="quizScoreText" class="text-emerald-700">0 Points (Low Risk)</span>
                     </div>
-                    <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
-                        <div id="quizMeterBar" class="risk-meter-bar bg-emerald-500 h-full w-0"></div>
+                    <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                        <div id="quizMeterBar" class="risk-meter-bar bg-emerald-700 h-full w-0"></div>
                     </div>
                 </div>
                 <div class="flex gap-2 w-full sm:w-auto">
-                    <button id="cancelQuizBtn" type="button" class="flex-1 sm:flex-none px-4 py-2 border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-100 text-sm">Cancel</button>
-                    <button id="submitQuizBtn" type="button" class="flex-1 sm:flex-none px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg text-sm shadow">Submit Report</button>
+                    <button id="cancelQuizBtn" type="button" class="flex-1 sm:flex-none px-3.5 py-2 border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-100 text-xs">Cancel</button>
+                    <button id="submitQuizBtn" type="button" class="flex-1 sm:flex-none px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg text-xs shadow-sm">Submit Report</button>
                 </div>
             </div>
         </div>
@@ -296,35 +480,37 @@
 
     <!-- MODAL: SHARE -->
     <div id="shareModal" class="fixed inset-0 modal-backdrop hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-slate-200">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
-                <h3 class="text-lg font-bold text-slate-900">Forward Verification Result</h3>
-                <button id="closeShareModalBtn" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+        <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-5 border border-slate-200">
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
+                <h3 class="text-sm font-bold text-slate-900">Forward Verification Result</h3>
+                <button id="closeShareModalBtn" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
             </div>
-            <textarea id="shareTextarea" readonly rows="5" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono text-slate-800 focus:outline-none mb-4"></textarea>
-            <button id="copyShareBtn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 text-sm">📋 Copy Text to Clipboard</button>
+            <textarea id="shareTextarea" readonly rows="5" class="w-full p-3 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono text-slate-800 focus:outline-none mb-3"></textarea>
+            <button id="copyShareBtn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-2.5 rounded-lg transition-colors text-xs flex items-center justify-center gap-2">
+                Copy Text to Clipboard
+            </button>
         </div>
     </div>
 
     <!-- MODAL: SMS SIMULATOR -->
     <div id="smsModal" class="fixed inset-0 modal-backdrop hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full p-6 text-white border border-slate-800">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-800">
-                <h3 class="text-base font-bold text-blue-400">📱 Feature Phone SMS Simulator</h3>
-                <button id="closeSmsModalBtn" class="text-slate-400 hover:text-white text-xl font-bold">&times;</button>
+        <div class="bg-slate-900 rounded-xl shadow-xl max-w-md w-full p-5 text-white border border-slate-800">
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-800">
+                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider">Feature Phone SMS Simulator</h3>
+                <button id="closeSmsModalBtn" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
             </div>
-            <div class="bg-black border-2 border-slate-700 rounded-xl p-4 font-mono text-xs space-y-3 mb-4">
-                <div class="text-slate-500 text-center border-b border-slate-800 pb-1">Gateway Endpoint: /api/sms</div>
-                <div id="smsDisplayOutgoing" class="bg-blue-900 text-blue-100 p-2 rounded-lg self-end ml-6 hidden"></div>
-                <div id="smsDisplayIncoming" class="bg-slate-800 text-green-400 p-2 rounded-lg mr-6 hidden"></div>
+            <div class="bg-black border border-slate-800 rounded-lg p-3 font-mono text-xs space-y-2 mb-3">
+                <div class="text-slate-500 text-center text-[10px] border-b border-slate-900 pb-1">Gateway Endpoint: /api/sms</div>
+                <div id="smsDisplayOutgoing" class="bg-slate-800 text-slate-200 p-2 rounded self-end ml-4 hidden"></div>
+                <div id="smsDisplayIncoming" class="bg-slate-900 text-emerald-400 p-2 rounded border border-slate-800 mr-4 hidden"></div>
             </div>
-            <form id="smsForm" class="space-y-3">
-                <input type="text" id="smsInput" placeholder="Type agency name or permission #" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded text-sm text-white focus:outline-none focus:border-blue-500" required>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 font-bold py-2 rounded text-sm transition-colors">Send Simulated SMS</button>
+            <form id="smsForm" class="space-y-2">
+                <input type="text" id="smsInput" placeholder="Type agency name or license #" class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded text-xs text-white focus:outline-none focus:border-slate-500" required>
+                <button type="submit" class="w-full bg-slate-800 hover:bg-slate-700 border border-slate-700 font-semibold py-2 rounded text-xs transition-colors">Send Simulated SMS</button>
             </form>
         </div>
     </div>
 
-    <script src="/static/app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
