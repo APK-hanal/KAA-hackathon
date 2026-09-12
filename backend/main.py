@@ -1,90 +1,220 @@
-from fastapi import FastAPI, Query, HTTPException, Form
+import os
+import sqlite3
+import json
+from fastapi import FastAPI, Form, Query, Request
+from fastapi.responses import HTMLResponse, PlainTextResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, PlainTextResponse
-from pydantic import BaseModel, Field
-from typing import Optional, List
-from contextlib import asynccontextmanager
+from pydantic import BaseModel
+from typing import List, Optional
+from rapidfuzz import process, fuzz
+import uvicorn
 
-from db import init_db
-from search import load_agencies, search_agency, add_report, get_agency_reports
+app = FastAPI(title="Agency Shield Nepal")
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
+# Initialize DB connection and schema
+try:
+    from db import init_db, get_db
     init_db()
-    load_agencies()
-    yield
+except ImportError:
+    DB_FILE = "dofe_agencies.db"
+    def get_db():
+        conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row
+        return conn
 
-app = FastAPI(title="Agency Shield Nepal", lifespan=lifespan)
+# STRICT FUZZY MATCH SIMILARITY THRESHOLD (Below 80% = Unregistered / Not Found)
+FUZZY_THRESHOLD = 80.0
 
-class AnswerItem(BaseModel):
-    question: str
-    flagged: bool
-    points: int
-    reason: str
-
-class ReportPayload(BaseModel):
-    agency_id: int
-    permission_no: str
+class ReportSchema(BaseModel):
+    agency_id: Optional[int] = None
+    permission_no: Optional[str] = "UNREGISTERED"
     risk_score: int
     risk_level: str
-    answers: List[AnswerItem]
-    comment: Optional[str] = Field(None, max_length=300)
+    answers: list
+    comment: Optional[str] = ""
+
+def compute_ui_status(row):
+    status_str = (row["status"] or "").lower() if "status" in row.keys() else "active"
+    if "suspended" in status_str or "blacklisted" in status_str or "canceled" in status_str:
+        return {
+            "color": "red",
+            "label": "SUSPENDED / UNLICENSED",
+            "description": "This agency license has been suspended or canceled by DoFE. Do not conduct business or pay money to them."
+        }
+    
+    phone = row["telephone"] if "telephone" in row.keys() else None
+    mobile = row["mobile"] if "mobile" in row.keys() else None
+    
+    if not phone and not mobile:
+        return {
+            "color": "yellow",
+            "label": "INCOMPLETE DOFE CONTACT DATA",
+            "description": "Agency is listed as active in registry, but missing verified telephone or office contact details."
+        }
+    
+    return {
+        "color": "green",
+        "label": "ACTIVE & REGISTERED",
+        "description": "Verified active recruitment agency with valid Department of Foreign Employment license."
+    }
+
+def fetch_reports_for_agency(cursor, agency_id):
+    if not agency_id:
+        return {"total_count": 0, "avg_risk_level": "N/A", "list": []}
+    
+    cursor.execute("""
+        SELECT id, risk_score, risk_level, answers_json, comment, created_at 
+        FROM reports 
+        WHERE agency_id = ? 
+        ORDER BY id DESC
+    """, (agency_id,))
+    rows = cursor.fetchall()
+    
+    if not rows:
+        return {"total_count": 0, "avg_risk_level": "N/A", "list": []}
+    
+    report_list = []
+    total_score = 0
+    for r in rows:
+        total_score += r["risk_score"]
+        try:
+            answers_parsed = json.loads(r["answers_json"])
+        except Exception:
+            answers_parsed = []
+        report_list.append({
+            "id": r["id"],
+            "risk_score": r["risk_score"],
+            "risk_level": r["risk_level"],
+            "answers_json": answers_parsed,
+            "comment": r["comment"],
+            "created_at": r["created_at"]
+        })
+    
+    avg_score = total_score / len(rows)
+    avg_level = "Low"
+    if avg_score >= 56:
+        avg_level = "High"
+    elif avg_score >= 26:
+        avg_level = "Medium"
+        
+    return {
+        "total_count": len(rows),
+        "avg_risk_level": avg_level,
+        "list": report_list
+    }
 
 @app.get("/api/search")
-def api_search(q: str = Query("", description="Agency name or permission number")):
-    return {"query": q, "results": search_agency(q)}
+def search_agencies(q: str = Query("", min_length=0)):
+    query = q.strip()
+    if not query:
+        return {"query": query, "results": [], "match_found": False}
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM agencies")
+    all_agencies = cursor.fetchall()
+    
+    matched_results = []
+    
+    for row in all_agencies:
+        agency_dict = dict(row)
+        name = agency_dict.get("name", "")
+        perm_no = agency_dict.get("permission_no", "") or ""
+        
+        score_name = fuzz.token_set_ratio(query.lower(), name.lower())
+        score_perm = fuzz.ratio(query.lower(), perm_no.lower())
+        best_score = max(score_name, score_perm)
+        
+        if best_score >= FUZZY_THRESHOLD:
+            agency_dict["similarity_score"] = round(best_score, 1)
+            agency_dict["ui_status"] = compute_ui_status(agency_dict)
+            agency_dict["community_reports"] = fetch_reports_for_agency(cursor, agency_dict["id"])
+            matched_results.append(agency_dict)
+            
+    conn.close()
+    
+    matched_results.sort(key=lambda x: x["similarity_score"], reverse=True)
+    
+    return {
+        "query": query,
+        "results": matched_results,
+        "match_found": len(matched_results) > 0
+    }
 
 @app.post("/api/reports")
-def submit_report(payload: ReportPayload):
-    try:
-        answers_dict = [a.model_dump() for a in payload.answers]
-        add_report(
-            agency_id=payload.agency_id,
-            permission_no=payload.permission_no,
-            risk_score=payload.risk_score,
-            risk_level=payload.risk_level,
-            answers_json=answers_dict,
-            comment=payload.comment or ""
-        )
-        return {"status": "success", "message": "Report submitted successfully"}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def create_report(report: ReportSchema):
+    conn = get_db()
+    cursor = conn.cursor()
+    
+    perm_no = report.permission_no
+    if not perm_no or perm_no == "N/A":
+        if report.agency_id:
+            cursor.execute("SELECT permission_no FROM agencies WHERE id = ?", (report.agency_id,))
+            row = cursor.fetchone()
+            if row and row["permission_no"]:
+                perm_no = row["permission_no"]
+    
+    ag_id = report.agency_id if report.agency_id else 0
+    
+    cursor.execute("""
+        INSERT INTO reports (agency_id, permission_no, risk_score, risk_level, answers_json, comment)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (
+        ag_id,
+        perm_no or "UNREGISTERED",
+        report.risk_score,
+        report.risk_level,
+        json.dumps(report.answers),
+        report.comment or ""
+    ))
+    conn.commit()
+    report_id = cursor.lastrowid
+    conn.close()
+    
+    return {"status": "success", "report_id": report_id}
 
 @app.post("/api/sms", response_class=PlainTextResponse)
-def sms_simulated_endpoint(Body: str = Form(...)):
-    """Simulates receiving an SMS and returning a feature-phone optimized response."""
+def sms_gateway(Body: str = Form(...)):
     query = Body.strip()
-    results = search_agency(query)
+    if not query:
+        return "Agency Shield: Send agency name or license # to check. e.g. 'Talent' or '958'"
+    
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM agencies")
+    all_agencies = cursor.fetchall()
+    
+    best_agency = None
+    highest_score = 0
+    
+    for row in all_agencies:
+        agency_dict = dict(row)
+        name = agency_dict.get("name", "")
+        perm_no = agency_dict.get("permission_no", "") or ""
+        
+        s1 = fuzz.token_set_ratio(query.lower(), name.lower())
+        s2 = fuzz.ratio(query.lower(), perm_no.lower())
+        score = max(s1, s2)
+        
+        if score > highest_score:
+            highest_score = score
+            best_agency = agency_dict
+            
+    conn.close()
+    
+    if highest_score < FUZZY_THRESHOLD or not best_agency:
+        return f"NOT FOUND: '{query}' is NOT registered in DoFE official records. High risk of fraud! Do not pay money. - Agency Shield Nepal"
+    
+    ui_status = compute_ui_status(best_agency)
+    name = best_agency.get("name", "Unknown")
+    lic = best_agency.get("permission_no", "N/A")
+    dist = best_agency.get("district", "N/A")
+    phone = best_agency.get("telephone") or best_agency.get("mobile") or "No phone"
+    
+    return f"AGENCY SHIELD: {name} (Lic #{lic})\nStatus: {ui_status['label']}\nDistrict: {dist}\nPhone: {phone}\nVerify before paying!"
 
-    if not results:
-        return (
-            f"AGENCY SHIELD: '{query}' NOT FOUND in DoFE registry. "
-            "WARNING: Do not pay money to unlicensed agents! Check again or call DoFE."
-        )
-
-    match = results[0]
-    name = match.get("name", "Unknown")[:30]
-    lic = match.get("permission_no", "N/A")
-    raw_status = (match.get("status") or "UNKNOWN").upper()
-    phone = match.get("telephone") or match.get("mobile") or "No phone"
-
-    if raw_status == "ACTIVE":
-        return (
-            f"✅ VERIFIED ACTIVE: {name} (Lic #{lic}). "
-            f"Phone: {phone}. Check job demand letter at dofe.gov.np before paying."
-        )
-    else:
-        return (
-            f"⚠️ WARNING: {name} (Lic #{lic}) status is {raw_status}. "
-            "DO NOT pay fees. Contact DoFE hotline."
-        )
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
-
-@app.get("/")
-def read_index():
-    return FileResponse("static/index.html")
+# Serve Static Assets
+app.mount("/", StaticFiles(directory="static", html=True), name="static_root")
 
 if __name__ == "__main__":
-    import uvicorn
     uvicorn.run("main:app", host="127.0.0.1", port=8080, reload=True)
