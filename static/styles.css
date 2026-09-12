@@ -5,7 +5,7 @@ body {
 }
 
 .modal-backdrop {
-    background-color: rgba(15, 23, 42, 0.6);
+    background-color: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(4px);
 }
 
@@ -13,7 +13,6 @@ body {
     transition: width 0.4s ease-in-out, background-color 0.4s ease-in-out;
 }
 
-/* Custom scrollbar for report history */
 .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
 }
@@ -23,4 +22,11 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #cbd5e1;
     border-radius: 3px;
+}
+
+/* Autocomplete suggestion box styling */
+.autocomplete-dropdown {
+    max-height: 220px;
+    overflow-y: auto;
+    z-index: 40;
 }
